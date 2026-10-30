@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#881337" />
+      <stop offset="100%" stop-color="#4A0420" />
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="8" stdDeviation="16" flood-color="#000000" flood-opacity="0.3" />
+    </filter>
+  </defs>
+  <!-- Background Rounded Shield -->
+  <rect width="512" height="512" rx="128" fill="url(#grad)" />
+  
+  <!-- Subtle Outer Ring -->
+  <circle cx="256" cy="256" r="210" fill="none" stroke="#FBCFE8" stroke-width="4" stroke-opacity="0.25" />
+
+  <!-- Radiant Inner Shield / Heart -->
+  <g filter="url(#shadow)">
+    <!-- Maternal Heart Shape -->
+    <path d="M256 416 C256 416, 96 312, 96 200 C96 140, 144 96, 204 96 C236 96, 256 120, 256 120 C256 120, 276 96, 308 96 C368 96, 416 140, 416 200 C416 312, 256 416, 256 416 Z" 
+          fill="#E11D48" />
+          
+    <!-- Clinical Cross Inside Heart -->
+    <rect x="238" y="180" width="36" height="110" rx="10" fill="#FFFFFF" />
+    <rect x="201" y="217" width="110" height="36" rx="10" fill="#FFFFFF" />
+  </g>
+
+  <!-- Maternal Crescent Halo -->
+  <circle cx="256" cy="235" r="92" fill="none" stroke="#FFE4E6" stroke-width="6" stroke-dasharray="14 10" opacity="0.6" />
+</svg>

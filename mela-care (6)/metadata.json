@@ -1,0 +1,6 @@
+{
+  "name": "Mela Care — Maternal & Youth Safety Companion",
+  "description": "Voice-first sisterhood companion for maternal health, pregnancy journey, healing, and confidential sanctuary in Ethiopia. Multilingual support in Amharic, Afaan Oromo, English, and Harari placeholder.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

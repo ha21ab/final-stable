@@ -1,0 +1,22 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --font-primary: 'Abyssinica SIL', 'Washra', 'Noto Sans Ethiopic', 'Noto Sans', system-ui, -apple-system, sans-serif;
+  }
+
+  body {
+    font-family: var(--font-primary);
+    background-color: #FFFDF7;
+    color: #1E2626;
+    margin: 0;
+    padding: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Make sure Ge'ez glyphs always use Abyssinica SIL / Washra / Noto Sans Ethiopic */
+  *, button, input, select, textarea {
+    font-family: var(--font-primary);
+  }
+}
