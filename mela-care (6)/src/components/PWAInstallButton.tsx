@@ -13,7 +13,7 @@ export const PWAInstallButton: React.FC<PWAInstallButtonProps> = ({
   lang,
   variant = 'pill',
 }) => {
-  const { isInstallable, isInstalled, isIOS, install } = usePWAInstall();
+  const { isInstallable, isInstalled, isIOS, isAndroid, install } = usePWAInstall();
   const [showIOSGuide, setShowIOSGuide] = useState(false);
   const isTMA = isTelegramMiniApp();
 
@@ -62,14 +62,14 @@ export const PWAInstallButton: React.FC<PWAInstallButtonProps> = ({
         aria-label="Install Mela Care as Progressive Web App"
         className={`flex items-center gap-1.5 font-bold transition-all active:scale-95 shadow-xs cursor-pointer ${
           variant === 'header'
-            ? 'px-3 py-1.5 rounded-2xl bg-white/20 hover:bg-white/30 text-white text-xs border border-white/30 backdrop-blur-xs'
+            ? 'w-9 h-9 sm:w-auto sm:h-auto justify-center p-0 sm:px-3 sm:py-1.5 rounded-xl sm:rounded-2xl bg-white/20 hover:bg-white/30 text-white text-xs border border-white/30 backdrop-blur-xs'
             : variant === 'banner'
             ? 'w-full py-3 px-4 rounded-2xl bg-gradient-to-r from-[#881337] to-[#DC2626] text-white text-xs sm:text-sm justify-center shadow-md hover:opacity-95'
             : 'px-3.5 py-2 rounded-2xl bg-white border border-[#FBCFE8] hover:border-[#881337] text-[#881337] text-xs'
         }`}
       >
         <Download className="w-3.5 h-3.5 shrink-0" />
-        <span className="truncate">{getButtonLabel()}</span>
+        <span className={variant === 'header' ? 'hidden sm:inline truncate' : 'truncate'}>{getButtonLabel()}</span>
       </button>
 
       {/* Manual Installation Guide Modal (iOS Safari & non-Chromium browsers) */}
@@ -115,7 +115,13 @@ export const PWAInstallButton: React.FC<PWAInstallButtonProps> = ({
                   1
                 </span>
                 <span>
-                  {lang === 'am' || lang === 'har' ? (
+                  {isAndroid ? (
+                    lang === 'am' || lang === 'har'
+                      ? <>በብሮውዘር የ<strong>ምናሌ ሶስት ነጥብ</strong> ምልክትን ይጫኑ።</>
+                      : lang === 'om'
+                      ? <>Mallattoo <strong>menuu dhibbee sadii</strong> biraawzarichaa tuqaa.</>
+                      : <>Tap the browser <strong>three-dot menu</strong> in the upper-right corner.</>
+                  ) : lang === 'am' || lang === 'har' ? (
                     <>በብሮውዘሩ ታች ያለውን የ<strong>ማጋራት (Share)</strong> ምልክት <Share className="w-3.5 h-3.5 inline mx-1 text-[#881337]" /> ይጫኑ።</>
                   ) : lang === 'om' ? (
                     <>Mallattoo <strong>Share</strong> <Share className="w-3.5 h-3.5 inline mx-1 text-[#881337]" /> tuqaa.</>
@@ -130,7 +136,13 @@ export const PWAInstallButton: React.FC<PWAInstallButtonProps> = ({
                   2
                 </span>
                 <span>
-                  {lang === 'am' || lang === 'har' ? (
+                  {isAndroid ? (
+                    lang === 'am' || lang === 'har'
+                      ? <><strong>«መተግበሪያን ጫን»</strong> ወይም <strong>«መነሻ ስክሪን ይጨምር»</strong> የሚለውን ይምረጡ።</>
+                      : lang === 'om'
+                      ? <> <strong>“App fe’i”</strong> ykn <strong>“Add to Home Screen”</strong> filadhaa.</>
+                      : <>Choose <strong>"Install app"</strong> or <strong>"Add to Home screen"</strong>.</>
+                  ) : lang === 'am' || lang === 'har' ? (
                     <>ወደ ታች ዝቅ ብለው <strong>«ወደ መነሻ ስክሪን ጨምር» (Add to Home Screen)</strong> የሚለውን ይምረጡ።</>
                   ) : lang === 'om' ? (
                     <>Gadi siqsuun <strong>«Add to Home Screen»</strong> filadhaa.</>

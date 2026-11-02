@@ -145,7 +145,7 @@ export default function App() {
         {/* Action Controls: PWA Install, Mask, Directory, 907 Call & Urgent Beacon */}
         <div className="flex items-center gap-1.5 sm:gap-2">
           {/* In-App PWA Install Trigger */}
-          <div className="hidden sm:block">
+          <div>
             <PWAInstallButton lang={lang} variant="header" />
           </div>
 
