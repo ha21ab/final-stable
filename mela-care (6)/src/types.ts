@@ -91,4 +91,3 @@ export interface ClinicRecord {
   verifiedPartner?: string;
   address?: string;
 }
-

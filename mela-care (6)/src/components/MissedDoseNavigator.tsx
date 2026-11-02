@@ -337,7 +337,7 @@ export const MissedDoseNavigator: React.FC<MissedDoseNavigatorProps> = ({
               ? 'ሳይደነግጡ ወዲያውኑ መውሰድ ያለብዎትን ትክክለኛ የህክምና እርምጃ ይወቁ'
               : lang === 'om'
               ? 'Osoo hin na’in tarkaanfii fayyaa sirrii fudhachuu qabdan beekaa'
-              : 'Evidence-based Ethiopian MoH & WHO clinical recovery protocol'}
+              : 'General guidance only. Instructions depend on the exact pill brand and dose—ask a pharmacist or clinician.'}
           </p>
         </div>
 
@@ -408,7 +408,7 @@ export const MissedDoseNavigator: React.FC<MissedDoseNavigatorProps> = ({
             {lang === 'am' || lang === 'har' ? 'የመርፌ ቀን ሲያልፍ' : lang === 'om' ? 'Lilmoo Ji’a 3' : 'Late Depo Shot'}
           </span>
           <span className={`text-[10px] mt-0.5 ${activeScenario === 'late_depo' ? 'text-rose-200' : 'text-[#783A4E]'}`}>
-            Grace period
+            Appointment due date
           </span>
         </button>
 

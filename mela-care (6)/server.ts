@@ -12,36 +12,14 @@ const app = express();
 const PORT = parseInt(process.env.PORT || '3000', 10);
 const isProd = process.env.NODE_ENV === 'production';
 
-app.use(express.json());
-
-// In-memory audit log for triage events (anonymous, zero personal identifiable data)
-interface TriageLogEntry {
-  id: string;
-  timestamp: string;
-  bodyZone?: string;
-  severity: 'EMERGENCY' | 'URGENT' | 'MONITOR';
-  dangerSignId?: string;
-  language: string;
-}
-
-const triageLogs: TriageLogEntry[] = [
-  {
-    id: 'log-1',
-    timestamp: new Date(Date.now() - 3600000 * 2).toISOString(),
-    bodyZone: 'pelvis_waters',
-    severity: 'EMERGENCY',
-    dangerSignId: 'vaginal_bleeding_emergency',
-    language: 'am',
-  },
-  {
-    id: 'log-2',
-    timestamp: new Date(Date.now() - 3600000 * 5).toISOString(),
-    bodyZone: 'head_eyes',
-    severity: 'EMERGENCY',
-    dangerSignId: 'severe_headache_blurred_vision',
-    language: 'om',
-  },
-];
+app.use(express.json({ limit: '8kb' }));
+app.use((_req, res, next) => {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('Referrer-Policy', 'no-referrer');
+  res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=(self)');
+  res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+  next();
+});
 
 // Curated Ethiopian Maternal Healthcare Centers Database
 const ETHIOPIAN_HEALTH_FACILITIES = [
@@ -51,7 +29,7 @@ const ETHIOPIAN_HEALTH_FACILITIES = [
       en: 'Tikur Anbessa (Black Lion) Specialized Hospital',
       am: 'ጥቁር አንበሳ ስፔሻላይዝድ ሆስፒታል',
       om: 'Hospitaala Ispeeshaalayizdii Gurraacha Abbayyaa',
-      har: 'ጥቁር አንበሳ ሆስፒታል [Slot]',
+      har: 'ጥቁር አንበሳ ሆስፒታል',
     },
     region: 'Addis Ababa',
     city: 'Addis Ababa',
@@ -68,7 +46,7 @@ const ETHIOPIAN_HEALTH_FACILITIES = [
       en: 'Gandhi Memorial Women’s Hospital',
       am: 'ጋንዲ መታሰቢያ የእናቶች ሆስፒታል',
       om: 'Hospitaala Haadholii Gaandii',
-      har: 'ጋንዲ የእናቶች ሆስፒታል [Slot]',
+      har: 'ጋንዲ የእናቶች ሆስፒታል',
     },
     region: 'Addis Ababa',
     city: 'Addis Ababa',
@@ -85,7 +63,7 @@ const ETHIOPIAN_HEALTH_FACILITIES = [
       en: 'Adama General Hospital & Medical College',
       am: 'አዳማ ጠቅላላ ሆስፒታል',
       om: 'Hospitaala Waliigalaa Adaamaa',
-      har: 'አዳማ ሆስፒታል [Slot]',
+      har: 'አዳማ ሆስፒታል',
     },
     region: 'Oromia',
     city: 'Adama (Nazret)',
@@ -102,7 +80,7 @@ const ETHIOPIAN_HEALTH_FACILITIES = [
       en: 'Jimma University Specialized Medical Center',
       am: 'ጅማ ዩኒቨርሲቲ ስፔሻላይዝድ ሆስፒታል',
       om: 'Hospitaala Yuunivarsiitii Jimmaa',
-      har: 'ጅማ ዩኒቨርሲቲ ሆስፒታል [Slot]',
+      har: 'ጅማ ዩኒቨርሲቲ ሆስፒታል',
     },
     region: 'Oromia',
     city: 'Jimma',
@@ -119,7 +97,7 @@ const ETHIOPIAN_HEALTH_FACILITIES = [
       en: 'Hiwot Fana Specialized University Hospital',
       am: 'ህይወት ፋና ስፔሻላይዝድ ሆስፒታል',
       om: 'Hospitaala Hiwoot Faanaa',
-      har: 'ሂዎት ፋና ሆስፒታል [Slot]',
+      har: 'ሂዎት ፋና ሆስፒታል',
     },
     region: 'Harari',
     city: 'Harar',
@@ -153,7 +131,7 @@ const ETHIOPIAN_HEALTH_FACILITIES = [
       en: 'Hawassa Comprehensive Specialized Hospital',
       am: 'ሐዋሳ አጠቃላይ ስፔሻላይዝድ ሆስፒታል',
       om: 'Hospitaala Hawaasaa',
-      har: 'ሐዋሳ ሆስፒታል [Slot]',
+      har: 'ሐዋሳ ሆስፒታል',
     },
     region: 'Sidama',
     city: 'Hawassa',
@@ -170,7 +148,7 @@ const ETHIOPIAN_HEALTH_FACILITIES = [
       en: 'Dil Chora Referral Hospital',
       am: 'ድል ጮራ ሪፈራል ሆስፒታል',
       om: 'Hospitaala Dilcooraa',
-      har: 'ድል ጮራ ሆስፒታል [Slot]',
+      har: 'ድል ጮራ ሆስፒታል',
     },
     region: 'Dire Dawa',
     city: 'Dire Dawa',
@@ -191,15 +169,15 @@ const EMERGENCY_HOTLINES = [
       en: 'National Ambulance Service (Free Toll-Free)',
       am: 'የነፃ አምቡላንስ ጥሪ አገልግሎት (907)',
       om: 'Tajaajila Ambulaansii Bilisaa Biyyooleessaa (907)',
-      har: 'ነፃ የአምቡላንስ ጥሪ 907 [Slot]',
+      har: 'ነፃ የአምቡላንስ ጥሪ 907',
     },
     phone: 'tel:907',
     available24h: true,
     description: {
-      en: 'Operated across all Ethiopian regions for obstetric emergencies and rapid maternal transport.',
+      en: 'Emergency transport line; availability and response time may vary by region. A call can help route urgent care.',
       am: 'በሁሉም የኢትዮጵያ ክልሎች ለነፍሰጡር እናቶች አስቸኳይ ትራንስፖርት የሚሰራ ነጻ መስመር ነው።',
       om: 'Naannolee hunda keessatti haadholii ulfaaf tajaajila geejjibaa hatattamaa kennu.',
-      har: 'ለነፍሰጡር እናቶች ነፃ አምቡላንስ [Slot]',
+      har: 'ለነፍሰጡር እናቶች ነፃ አምቡላንስ',
     },
   },
   {
@@ -208,15 +186,15 @@ const EMERGENCY_HOTLINES = [
       en: 'Ministry of Health Emergency Information (952)',
       am: 'የጤና ጥበቃ ሚኒስቴር የመረጃ ማዕከል (952)',
       om: 'Wiirtuu Odeeffannoo Ministeera Fayyaa (952)',
-      har: 'የጤና ጥበቃ 952 [Slot]',
+      har: 'የጤና ጥበቃ 952',
     },
     phone: 'tel:952',
     available24h: true,
     description: {
-      en: 'Government toll-free health consultation, clinic verification, and health extension support.',
+      en: 'Government health information line; availability and services may vary. Verify the service before relying on it.',
       am: 'የመንግስት የጤና መረጃ፣ የጤና ጣቢያ አድራሻ እና የባለሙያ ድጋፍ መስመር።',
       om: 'Odeeffannoo fayyaa mootummaa bilisaan argachuuf.',
-      har: 'የመንግስት ነፃ የጤና መስመር [Slot]',
+      har: 'የመንግስት ነፃ የጤና መስመር',
     },
   },
 ];
@@ -237,46 +215,55 @@ app.get('/api/facilities', (req: Request, res: Response) => {
     const filtered = ETHIOPIAN_HEALTH_FACILITIES.filter(
       (f) => f.region.toLowerCase() === region.toLowerCase()
     );
-    return res.json({ facilities: filtered });
+    return res.json({
+      facilities: filtered,
+      dataStatus: 'directory_requires_local_verification',
+      disclaimer: 'Call facilities to verify service availability, maternity hours, ambulance access, and current phone numbers.',
+    });
   }
-  return res.json({ facilities: ETHIOPIAN_HEALTH_FACILITIES });
+  return res.json({
+    facilities: ETHIOPIAN_HEALTH_FACILITIES,
+    dataStatus: 'directory_requires_local_verification',
+    disclaimer: 'Call facilities to verify service availability, maternity hours, ambulance access, and current phone numbers.',
+  });
 });
 
 app.get('/api/emergency-hotlines', (req: Request, res: Response) => {
   res.json({ hotlines: EMERGENCY_HOTLINES });
 });
 
-app.post('/api/triage-log', (req: Request, res: Response) => {
-  const { bodyZone, severity, dangerSignId, language } = req.body;
-  const newEntry: TriageLogEntry = {
-    id: `log-${Date.now()}`,
-    timestamp: new Date().toISOString(),
-    bodyZone,
-    severity: severity || 'URGENT',
-    dangerSignId,
-    language: language || 'am',
-  };
-  triageLogs.unshift(newEntry);
-  // Keep last 100 entries only
-  if (triageLogs.length > 100) triageLogs.pop();
-
-  res.status(201).json({ success: true, logId: newEntry.id });
-});
-
-app.post('/api/dispatch-alert', (req: Request, res: Response) => {
+app.post('/api/prepare-emergency-message', (req: Request, res: Response) => {
   const { dangerSignTitle, severity, locationName, language } = req.body;
+  if (typeof dangerSignTitle !== 'string' && dangerSignTitle !== undefined) {
+    return res.status(400).json({ error: 'dangerSignTitle must be a string' });
+  }
+  if (typeof dangerSignTitle === 'string' && dangerSignTitle.length > 120) {
+    return res.status(400).json({ error: 'dangerSignTitle is too long' });
+  }
+  if (typeof locationName !== 'string' && locationName !== undefined) {
+    return res.status(400).json({ error: 'locationName must be a string' });
+  }
+  if (typeof locationName === 'string' && locationName.length > 160) {
+    return res.status(400).json({ error: 'locationName is too long' });
+  }
+  if (!['am', 'om', 'en', 'har'].includes(language)) {
+    return res.status(400).json({ error: 'Unsupported language' });
+  }
+  if (severity !== undefined && !['critical', 'high', 'moderate', 'low'].includes(severity)) {
+    return res.status(400).json({ error: 'Unsupported severity' });
+  }
 
-  const alertMessage =
+  const preparedMessage =
     language === 'am'
-      ? `[አስቸኳይ የእርግዝና አደጋ ጥሪ] እናትየው ምልክት፦ ${dangerSignTitle || 'ከፍተኛ አደጋ'}። ቦታ፦ ${locationName || 'አካባቢው'}። በአስቸኳይ 907 አምቡላንስ ይላኩ።`
+      ? `[አስቸኳይ የእርግዝና ማስታወቂያ] ምልክት፦ ${dangerSignTitle || 'ከፍተኛ አደጋ'}። ቦታ፦ ${locationName || 'አካባቢው'}። እባክዎ አስቸኳይ ትራንስፖርት አስፈላጊነቱን ያረጋግጡ።`
       : language === 'om'
-      ? `[Balaa Hatattamaa Ulfaa] Mallattoo: ${dangerSignTitle || 'Balaa Cimaa'}. Bakka: ${locationName || 'Naannoo'}. Battalumatti 907 bilbilaa.`
-      : `[MATERNAL EMERGENCY DISPATCH] Symptom: ${dangerSignTitle || 'Critical Danger Sign'}. Location: ${locationName || 'Unknown'}. Please send 907 transport immediately.`;
+      ? `[Beeksisa Hatattamaa Ulfaa] Mallattoo: ${dangerSignTitle || 'Balaa Cimaa'}. Bakka: ${locationName || 'Naannoo'}. Mee geejjiba hatattamaa barbaachisu mirkaneessaa.`
+      : `[MATERNAL EMERGENCY MESSAGE] Symptom: ${dangerSignTitle || 'Critical Danger Sign'}. Location: ${locationName || 'Unknown'}. Please confirm urgent transport is needed.`;
 
   res.json({
     success: true,
-    dispatchId: `DISPATCH-${Date.now().toString(36).toUpperCase()}`,
-    alertMessage,
+    messageId: `PREPARED-${Date.now().toString(36).toUpperCase()}`,
+    alertMessage: preparedMessage,
     timestamp: new Date().toISOString(),
     ambulanceTollFree: '907',
   });
@@ -284,6 +271,9 @@ app.post('/api/dispatch-alert', (req: Request, res: Response) => {
 
 // Fullstack Integration: Vite Dev Middleware or Static Production Serving
 async function startServer() {
+  if (process.env.VERCEL) {
+    return;
+  }
   if (!isProd) {
     const { createServer: createViteServer } = await import('vite');
     const vite = await createViteServer({
@@ -304,3 +294,6 @@ async function startServer() {
 }
 
 startServer();
+
+export { app };
+export default app;

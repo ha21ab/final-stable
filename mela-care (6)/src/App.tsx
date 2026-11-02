@@ -24,23 +24,22 @@ import {
   Home,
   Volume2,
   VolumeX,
-  PhoneCall,
-  Shield,
-  Heart,
   EyeOff,
-  Building2,
-  Sparkles,
+  Heart,
 } from 'lucide-react';
 
 export default function App() {
-  const [lang, setLang] = useState<AppLanguage>('am');
+  const [lang, setLang] = useState<AppLanguage>(() => {
+    const saved = localStorage.getItem('mela-care-language');
+    return saved === 'am' || saved === 'om' || saved === 'en' || saved === 'har' ? saved : 'am';
+  });
   const [activeCategory, setActiveCategory] = useState<ActiveServiceCategory>(null);
   const [isBeaconOpen, setIsBeaconOpen] = useState<boolean>(false);
   const [isMaskOpen, setIsMaskOpen] = useState<boolean>(false);
   const [isDirectoryOpen, setIsDirectoryOpen] = useState<boolean>(false);
   const [isPlayingAudio, setIsPlayingAudio] = useState<boolean>(false);
   const [dangerSignsInitialMode, setDangerSignsInitialMode] = useState<
-    'body_map' | 'birth_kit' | 'kick_counter' | 'edema_test'
+    'body_map' | 'birth_kit' | 'kick_counter' | 'edema_test' | 'labor_timer'
   >('body_map');
 
   // Telegram WebApp Initialization
@@ -68,11 +67,12 @@ export default function App() {
   const handleSelectLang = (newLang: AppLanguage) => {
     audioEngine.stop();
     setLang(newLang);
+    localStorage.setItem('mela-care-language', newLang);
   };
 
   const handleSelectCategory = (
     category: ActiveServiceCategory,
-    initialMode?: 'body_map' | 'birth_kit' | 'kick_counter' | 'edema_test'
+    initialMode?: 'body_map' | 'birth_kit' | 'kick_counter' | 'edema_test' | 'labor_timer'
   ) => {
     audioEngine.stop();
     if (initialMode) {
@@ -96,7 +96,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FFF5F7] text-[#4A0420] flex flex-col font-sans selection:bg-[#FFE4E6]">
+    <div className="min-h-screen w-full overflow-x-hidden bg-[#FCFAF8] text-slate-900 flex flex-col font-sans selection:bg-[#FBCFE8]">
       {/* Discreet Mask Disguise (Toggled in emergency on shared phone) */}
       <DiscreetMask
         isOpen={isMaskOpen}
@@ -105,8 +105,8 @@ export default function App() {
       />
 
       {/* Top Persistent App Crown */}
-      <header className="sticky top-0 z-40 bg-gradient-to-r from-[#881337] to-[#4A0420] text-white px-3 sm:px-4 py-3 shadow-md flex items-center justify-between">
-        <div className="flex items-center gap-2">
+      <header className="sticky top-0 z-40 bg-[#6E1E3A] text-white px-3 sm:px-4 py-2.5 sm:py-3 shadow-md flex items-center justify-between gap-2">
+        <div className="flex items-center gap-2 min-w-0">
           {activeCategory !== null && (
             <button
               type="button"
@@ -120,16 +120,18 @@ export default function App() {
 
           <div
             onClick={handleGoHome}
-            className="cursor-pointer flex items-center gap-2.5"
+            className="cursor-pointer flex items-center gap-2.5 min-w-0"
           >
-            <div className="w-9 h-9 rounded-2xl bg-[#E11D48] text-white flex items-center justify-center font-black text-base shadow-xs">
-              <Heart className="w-5 h-5 fill-white" />
-            </div>
+            <img
+              src={`${import.meta.env.BASE_URL}mela-mark.png`}
+              alt=""
+              className="h-9 w-9 rounded-lg bg-white object-contain p-0.5 shadow-xs"
+            />
             <div>
-              <span className="font-black text-base sm:text-lg tracking-tight block leading-tight">
+              <span className="font-black text-base sm:text-lg tracking-tight block leading-tight truncate max-w-[132px] sm:max-w-none">
                 {lang === 'am' || lang === 'har' ? 'መላ ኬር' : 'Mela Care'}
               </span>
-              <span className="text-[10px] text-rose-200 block leading-tight font-medium">
+              <span className="hidden sm:block text-[10px] text-rose-200 leading-tight font-medium">
                 {lang === 'am' || lang === 'har'
                   ? 'የእናቶች እና የስነ-ተዋልዶ ጤና ስርዓት'
                   : lang === 'om'
@@ -143,45 +145,26 @@ export default function App() {
         {/* Action Controls: PWA Install, Mask, Directory, 907 Call & Urgent Beacon */}
         <div className="flex items-center gap-1.5 sm:gap-2">
           {/* In-App PWA Install Trigger */}
-          <PWAInstallButton lang={lang} variant="header" />
+          <div className="hidden sm:block">
+            <PWAInstallButton lang={lang} variant="header" />
+          </div>
 
           {/* Quick Privacy Disguise Shield */}
           <button
             type="button"
             onClick={() => setIsMaskOpen(true)}
-            className="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-white active:scale-95 transition-all"
+            className="hidden sm:inline-flex p-2 rounded-xl bg-white/10 hover:bg-white/20 text-white active:scale-95 transition-all"
             title={lang === 'am' || lang === 'har' ? 'የሚስጥር መሸፈኛ' : lang === 'om' ? 'Haguuggi Iccitii' : 'Discreet Mask'}
             aria-label="Discreet disguise screen"
           >
             <EyeOff className="w-4 h-4 text-rose-200" />
           </button>
 
-          {/* Health Centers Directory Trigger */}
-          <button
-            type="button"
-            onClick={() => setIsDirectoryOpen(true)}
-            className="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-white active:scale-95 transition-all"
-            title={lang === 'am' || lang === 'har' ? 'የሆስፒታሎች ማውጫ' : lang === 'om' ? 'Galmee Hospitaalotaa' : 'Hospitals Directory'}
-            aria-label="Hospital Directory"
-          >
-            <Building2 className="w-4 h-4 text-rose-200" />
-          </button>
-
-          {/* Quick 907 Ambulance link */}
-          <a
-            href="tel:907"
-            className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-2xl bg-[#DC2626] hover:bg-red-700 text-white font-bold text-xs shadow-xs transition-all active:scale-95"
-            title="National Ambulance Service Toll-Free"
-          >
-            <PhoneCall className="w-3.5 h-3.5" />
-            <span>907</span>
-          </a>
-
           {/* SOS Beacon Modal Trigger */}
           <button
             type="button"
             onClick={handleEmergencyTrigger}
-            className="px-3 py-1.5 rounded-2xl bg-[#DC2626] hover:bg-red-700 active:scale-95 text-white font-black text-xs flex items-center gap-1 shadow-xs"
+            className="min-h-11 sm:min-h-0 px-3 py-2.5 sm:py-1.5 rounded-xl sm:rounded-2xl bg-[#DC2626] hover:bg-red-700 active:scale-95 text-white font-black text-xs flex items-center gap-1 shrink-0"
             aria-label="Emergency SOS flashcard"
           >
             <AlertCircle className="w-3.5 h-3.5 animate-pulse" />
@@ -200,7 +183,6 @@ export default function App() {
             lang={lang}
             onSelectLanguage={handleSelectLang}
             onSelectCategory={handleSelectCategory}
-            onEmergencyTrigger={handleEmergencyTrigger}
             onOpenDirectory={() => setIsDirectoryOpen(true)}
           />
         ) : activeCategory === 'danger_signs' ? (
@@ -265,17 +247,16 @@ export default function App() {
         )}
       </main>
 
-      {/* Bottom Sticky Sisterhood Bar */}
-      <footer className="sticky bottom-0 z-30 bg-[#FFF0F3] border-t border-[#FBCFE8] px-4 py-2.5 shadow-sm">
-        <div className="max-w-6xl mx-auto flex items-center justify-between">
-          {/* Home Button */}
+      {/* Bottom sticky navigation */}
+      <footer className="sticky bottom-0 z-30 bg-white border-t border-slate-200 px-3 py-2 shadow-lg">
+        <div className="max-w-6xl mx-auto grid grid-cols-3 gap-2">
           <button
             type="button"
             onClick={handleGoHome}
-            className={`flex flex-col items-center justify-center p-1 rounded-xl text-xs font-bold transition-all ${
+            className={`min-h-12 flex flex-col items-center justify-center rounded-xl text-xs font-bold ${
               activeCategory === null
-                ? 'text-[#881337]'
-                : 'text-[#783A4E] hover:text-[#4A0420]'
+                ? 'bg-[#6E1E3A] text-white'
+                : 'text-slate-700'
             }`}
           >
             <Home className="w-5 h-5" />
@@ -283,51 +264,24 @@ export default function App() {
               {lang === 'am' ? 'መነሻ' : lang === 'om' ? 'Jalqaba' : 'Home'}
             </span>
           </button>
-
-          {/* Voice Companion Indicator / Control */}
           <button
             type="button"
-            onClick={() => {
-              if (isPlayingAudio) {
-                audioEngine.stop();
-              } else {
-                audioEngine.play(
-                  lang === 'am'
-                    ? 'መላ ኬር ለእርስዎ እና ለልጅዎ ጤና የተዘጋጀ ነው። የእርግዝና አደገኛ ምልክቶችን ወይም የቤተሰብ ምጣኔን ይጫኑ።'
-                    : 'Mela Care is here for maternal health, danger sign recognition, and family planning.',
-                  'CALM_GUIDE',
-                  lang
-                );
-              }
-            }}
-            className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-2xl text-xs font-bold transition-all shrink-0 max-w-[55%] overflow-hidden ${
-              isPlayingAudio
-                ? 'bg-[#FFE4E6] text-[#881337] border border-[#881337]'
-                : 'bg-white border border-[#FBCFE8] text-[#881337] hover:bg-[#FFF5F7]'
+            onClick={() => handleSelectCategory('family_planning')}
+            className={`min-h-12 flex flex-col items-center justify-center rounded-xl text-xs font-bold ${
+              activeCategory === 'family_planning'
+                ? 'bg-[#E9F5F1] text-[#0F766E]'
+                : 'text-slate-700'
             }`}
           >
-            {isPlayingAudio ? (
-              <>
-                <VolumeX className="w-4 h-4 text-[#E11D48] shrink-0" />
-                <span className="truncate">{lang === 'am' || lang === 'har' ? 'አቁም' : lang === 'om' ? 'Dhaabi' : 'Pause'}</span>
-              </>
-            ) : (
-              <>
-                <Volume2 className="w-4 h-4 text-[#881337] shrink-0" />
-                <span className="truncate">
-                  {lang === 'am' || lang === 'har' ? 'ድምፅ አጫውት' : lang === 'om' ? 'Sagalee' : 'Listen Voice'}
-                </span>
-              </>
-            )}
+            <Heart className="w-5 h-5" />
+            <span className="mt-0.5">{lang === 'am' ? 'የቤተሰብ ምጣኔ' : lang === 'om' ? 'Karoora Maatii' : 'Family Plan'}</span>
           </button>
-
-          {/* Persistent Quick SOS Flashcard */}
           <button
             type="button"
             onClick={handleEmergencyTrigger}
-            className="flex flex-col items-center justify-center p-1 rounded-xl text-xs font-black text-[#DC2626] active:scale-95"
+            className="min-h-12 flex flex-col items-center justify-center rounded-xl text-xs font-black bg-red-700 text-white"
           >
-            <AlertCircle className="w-5 h-5 animate-pulse" />
+            <AlertCircle className="w-5 h-5" />
             <span className="text-[10px] mt-0.5">
               {lang === 'am' || lang === 'har' ? 'አደጋ 907' : lang === 'om' ? 'Balaa 907' : 'SOS 907'}
             </span>

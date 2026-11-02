@@ -136,17 +136,6 @@ export const DangerSignsSystem: React.FC<DangerSignsSystemProps> = ({
     triggerHaptic('heavy');
     setActiveBeaconSign(sign);
     setIsBeaconOpen(true);
-    // Log triage event to fullstack backend
-    fetch('/api/triage-log', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        bodyZone: sign.bodyZone,
-        severity: sign.severity,
-        dangerSignId: sign.id,
-        language: lang,
-      }),
-    }).catch((e) => console.error('Triage log failed:', e));
   };
 
   // Start 5-second Edema Test
@@ -170,7 +159,16 @@ export const DangerSignsSystem: React.FC<DangerSignsSystemProps> = ({
   // Dispatch Emergency Alert to HEW / Family via API
   const handleDispatchAlert = (sign: DangerSign) => {
     setIsDispatching(true);
-    fetch('/api/dispatch-alert', {
+    const buildLocalAlert = () => {
+      const title = resolveText(sign.title, lang);
+      return lang === 'am' || lang === 'har'
+        ? `አደጋ፦ ${title}። ወደ የጤና ጣቢያ ይሂዱ ወይም 907 ይደውሉ። አሁን ያለበትን ቦታ ይንገሩ።`
+        : lang === 'om'
+        ? `Balaa: ${title}. Gara buufata fayyaatti deemi ykn 907 bilbili. Bakka amma jirtu himi.`
+        : `Emergency: ${title}. Go to a health facility or call 907. State your current location.`;
+    };
+
+    fetch('/api/prepare-emergency-message', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -193,7 +191,17 @@ export const DangerSignsSystem: React.FC<DangerSignsSystemProps> = ({
           );
         }
       })
-      .catch((err) => console.error(err))
+      .catch((err) => {
+        console.warn('Emergency message API unavailable on static hosting:', err);
+        navigator.clipboard?.writeText(buildLocalAlert());
+        setDispatchStatus(
+          lang === 'am' || lang === 'har'
+            ? 'የአደጋ መልእክት ዝግጁ ሆኗል እና ተቀድቷል። 907 ይደውሉ።'
+            : lang === 'om'
+            ? 'Ergaan hatattamaa qophaaʼeera, waraabameera. 907 bilbilaa.'
+            : 'Emergency message is ready and copied. Call 907 now.'
+        );
+      })
       .finally(() => setIsDispatching(false));
   };
 
@@ -257,14 +265,14 @@ export const DangerSignsSystem: React.FC<DangerSignsSystemProps> = ({
           <a
             href="tel:907"
             className="px-3.5 py-2 rounded-2xl bg-[#DC2626] text-white text-xs font-black flex items-center gap-1.5 shadow-xs active:scale-95 transition-all shrink-0"
-            title="National Ambulance Service"
+            title="Emergency Ambulance Service 907"
           >
             <PhoneCall className="w-3.5 h-3.5" />
             <span>907</span>
           </a>
         </div>
 
-        {/* Tactile Sanctuary Mode Selector */}
+        {/* Pregnancy and danger-sign tools */}
         <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 pt-1">
           <button
             type="button"
@@ -292,7 +300,7 @@ export const DangerSignsSystem: React.FC<DangerSignsSystemProps> = ({
           >
             <Clock className="w-4 h-4 text-[#E11D48]" />
             <span className="text-[11px] sm:text-xs font-bold leading-tight mt-0.5">
-              {lang === 'am' || lang === 'har' ? 'ምጥ ቆጣሪ' : lang === 'om' ? 'Ciniinsuu' : '5-1-1 Labor'}
+              {lang === 'am' || lang === 'har' ? 'ምጥ ቆጣሪ' : lang === 'om' ? 'Lakkoofsa ciniinsuu' : 'Labor Timer'}
             </span>
           </button>
 
@@ -337,7 +345,7 @@ export const DangerSignsSystem: React.FC<DangerSignsSystemProps> = ({
           >
             <Timer className="w-4 h-4 text-amber-500" />
             <span className="text-[11px] sm:text-xs font-bold leading-tight mt-0.5">
-              {lang === 'am' || lang === 'har' ? 'የእብጠት ምርመራ' : lang === 'om' ? 'Dhiita' : 'Edema'}
+              {lang === 'am' || lang === 'har' ? 'እብጠት ምልከታ' : lang === 'om' ? 'Dhiita ilaaluu' : 'Swelling Check'}
             </span>
           </button>
         </div>
@@ -371,24 +379,24 @@ export const DangerSignsSystem: React.FC<DangerSignsSystemProps> = ({
           <div className="space-y-1">
             <span className="text-[10px] uppercase font-black tracking-widest text-[#9D174D] block">
               {lang === 'am' || lang === 'har'
-                ? 'የ5 ሰከንድ የእግር እብጠት መፈተሻ'
+                ? 'የእግር እብጠት ምልከታ'
                 : lang === 'om'
                 ? 'Qorannoo Dhiita Miilaa Sekoondii 5'
-                : '5-Second Shin Pitting Test'}
+                : 'Swelling Observation (Not A Diagnosis)'}
             </span>
             <h3 className="text-lg font-black text-[#4A0420]">
               {lang === 'am' || lang === 'har'
-                ? 'የእግር እና የፊት እብጠት ፈጣን ምርመራ'
+                ? 'የእግር እና የፊት እብጠት ምልከታ'
                 : lang === 'om'
                 ? 'Qorannoo Dhiita Miilaa fi Fuulaa'
-                : '5-Second Shin Pitting Test'}
+                : 'Swelling Observation'}
             </h3>
             <p className="text-xs text-[#783A4E]">
               {lang === 'am' || lang === 'har'
-                ? 'አውራ ጣትዎን በእግርዎ የፊት አጥንት (የቅልጥም አጥንት) ላይ ለ5 ሰከንድ አጥብቀው ይጫኑ።'
+                ? 'ይህ ምርመራ አይደለም። የታየውን እብጠት ብቻ ይመልከቱ እና ከምልከታው ራስዎን አይመዝኑ።'
                 : lang === 'om'
-                ? 'Qubeelaa keessan lafee miila duraa irratti sekoondii 5 gadi dhiibaa.'
-                : 'Press your thumb firmly against the front shin bone for 5 seconds, then release.'}
+                ? 'Kun qorannoo miti. Dhiita miilaa qofaa ilaalaa; bu’aa isaatiif of murteessuu hin yaalin.'
+                : 'This is not a diagnostic test. Observe visible swelling only; do not diagnose yourself from this check.'}
             </p>
           </div>
 
@@ -454,10 +462,10 @@ export const DangerSignsSystem: React.FC<DangerSignsSystemProps> = ({
                 <div className="p-3 bg-red-100 rounded-xl border border-red-300 text-xs text-[#991B1B] font-bold space-y-2">
                   <p>
                     {lang === 'am' || lang === 'har'
-                      ? '⚠️ ጥልቅ ጉድጓድ ሆኖ መቆየቱ የከፍተኛ ደም ግፊት ወይም የኩላሊት ቀውስ (ፕሪኤክላምፕሲያ) ምልክት ነው። ዛሬውኑ የደም ግፊትዎን ያስመርምሩ!'
+                      ? '⚠️ የሚታይ እብጠት በእርግዝና ወቅት የሚገኝ የከፍተኛ አደጋ ምልክት ሊሆን ይችላል። ራስዎን አይመዝኑ፤ ዛሬውኑ ክትትል ወይም ጤና ተቋም ይጠይቁ።'
                       : lang === 'om'
-                      ? '⚠️ Goollee ta’ee hafuun mallattoo dhiibbaa dhiigaa cimaa ykn dhibee kaleeti. Har’uma dhiibbaa dhiigaa qoradhaa!'
-                      : '⚠️ Pitting edema is a sign of preeclampsia or kidney distress. Have your blood pressure checked today!'}
+                      ? '⚠️ Dhiita mul’atu mallattoo balaa ulfaa yeroo ta’u danda’a. Har’a eegumsa dahuumsa ykn buufata fayyaa gaafadhaa.'
+                      : 'Visible swelling can be an important pregnancy warning. Do not diagnose yourself; seek antenatal care or a health facility today.'}
                   </p>
                   <a
                     href="tel:907"

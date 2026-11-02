@@ -45,7 +45,7 @@ export const FamilyPlanningSystem: React.FC<FamilyPlanningSystemProps> = ({
   onGoHome,
   onOpenDirectory,
 }) => {
-  // Navigation mode: 'horizon' (time ribbon) | 'compass' (guided advisor) | 'myths' (flipping hearth) | 'lunar' (refill moon) | 'missed_dose' (crisis navigator)
+  // Task navigation: duration, method advisor, missed dose, common myths, and reminders.
   const [activeSection, setActiveSection] = useState<'horizon' | 'compass' | 'myths' | 'lunar' | 'missed_dose'>('horizon');
 
   // Selected time horizon method
@@ -209,12 +209,12 @@ export const FamilyPlanningSystem: React.FC<FamilyPlanningSystemProps> = ({
                 className="text-[10px] uppercase font-bold tracking-wider text-[#881337] bg-[#FFE4E6] px-2.5 py-1 rounded-full flex items-center gap-1 border border-[#FBCFE8]"
               >
                 <Building2 className="w-3 h-3 text-[#E11D48]" />
-                <span>Clinics</span>
+                <span>{lang === 'om' ? 'Eeggannoo' : lang === 'am' || lang === 'har' ? 'የጤና ጣቢያ' : 'Health facilities'}</span>
               </button>
             )}
             <span className="text-[10px] uppercase font-black tracking-widest text-[#881337] bg-[#FFE4E6] px-3 py-1 rounded-full flex items-center gap-1">
               <Heart className="w-3 h-3 text-[#E11D48]" />
-              <span>Sisterhood Choice</span>
+              <span>{lang === 'om' ? 'Iccitii' : lang === 'am' || lang === 'har' ? 'ግላዊ ምርጫ' : 'Private Choice'}</span>
             </span>
           </div>
         </div>
@@ -222,10 +222,12 @@ export const FamilyPlanningSystem: React.FC<FamilyPlanningSystemProps> = ({
         <div>
           <h2 className="text-xl font-black text-[#4A0420] leading-tight">
             {lang === 'am'
-              ? 'የቤተሰብ ምጣኔ የጊዜ አድማስ'
+              ? 'የቤተሰብ ምጣኔ'
               : lang === 'om'
-              ? 'Daangaa Yeroo Karoora Maatii'
-              : 'Family Planning & Life Horizon'}
+              ? 'Karoora Maatii'
+              : lang === 'har'
+              ? 'የቤተሰብ ምጣኔ'
+              : 'Family Planning'}
           </h2>
           <p className="text-xs text-[#783A4E]">
             {lang === 'am'
@@ -236,7 +238,7 @@ export const FamilyPlanningSystem: React.FC<FamilyPlanningSystemProps> = ({
           </p>
         </div>
 
-        {/* 5 Main Sanctuary Modes */}
+        {/* Family planning tools */}
         <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 pt-1">
           <button
             type="button"
@@ -249,7 +251,7 @@ export const FamilyPlanningSystem: React.FC<FamilyPlanningSystemProps> = ({
           >
             <Clock className="w-4 h-4 mb-0.5 text-rose-300" />
             <span className="text-[11px] sm:text-xs font-bold leading-tight mt-0.5">
-              {lang === 'am' || lang === 'har' ? 'የጊዜ አድማስ' : lang === 'om' ? 'Yeroo' : 'Duration'}
+              {lang === 'am' || lang === 'har' ? 'የጊዜ አማራጮች' : lang === 'om' ? 'Yeroo' : 'Explore methods'}
             </span>
           </button>
 
@@ -294,7 +296,7 @@ export const FamilyPlanningSystem: React.FC<FamilyPlanningSystemProps> = ({
           >
             <Sparkles className="w-4 h-4 mb-0.5 text-amber-400" />
             <span className="text-[11px] sm:text-xs font-bold leading-tight mt-0.5">
-              {lang === 'am' || lang === 'har' ? 'እውነት & ወሬ' : lang === 'om' ? 'Soba & Dhugaa' : 'Myths'}
+              {lang === 'am' || lang === 'har' ? 'የተለመዱ እምነቶች' : lang === 'om' ? 'Dhugaa & Sobaa' : 'Common facts'}
             </span>
           </button>
 
@@ -336,7 +338,7 @@ export const FamilyPlanningSystem: React.FC<FamilyPlanningSystemProps> = ({
               </div>
               <div className="p-4 sm:p-5 -mt-6 relative z-10 space-y-1">
                 <h3 className="text-lg sm:text-xl font-black text-white leading-tight">
-                  {lang === 'am' || lang === 'har' ? 'የተረጋጋና ምስጢራዊ የወሊድ መቆጣጠሪያ ምርጫ' : lang === 'om' ? 'Filannoo Karoora Maatii Iccitii fi Nagaa' : 'Empowered Sisterhood Contraceptive Care'}
+                  {lang === 'am' || lang === 'har' ? 'ለጤናዎ እና ለቤተሰብዎ አግባብነት ያለው የወሊድ መቆጣጠሪያ አማራጭ' : lang === 'om' ? 'Mala ulfa ittisuu fayyaa fi maatii keessaniif mijatu' : 'Choose a contraceptive option for your health and family'}
                 </h3>
                 <p className="text-xs text-rose-100 font-medium leading-relaxed">
                   {lang === 'am' || lang === 'har'
@@ -363,7 +365,7 @@ export const FamilyPlanningSystem: React.FC<FamilyPlanningSystemProps> = ({
                 </span>
               </div>
 
-              <div className="flex items-center gap-2 overflow-x-auto pb-1.5 no-scrollbar">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 pb-1">
                 {horizonRibbon.map((item) => {
                   const isSelected = selectedMethodId === item.id;
                   return (
@@ -371,7 +373,7 @@ export const FamilyPlanningSystem: React.FC<FamilyPlanningSystemProps> = ({
                       key={item.id}
                       type="button"
                       onClick={() => setSelectedMethodId(item.id)}
-                      className={`py-3 px-3.5 rounded-2xl font-black text-xs shrink-0 flex flex-col items-center justify-center transition-all duration-200 active:scale-95 border min-w-[95px] ${
+                      className={`min-w-0 py-3 px-2 rounded-2xl font-black text-xs flex flex-col items-center justify-center transition-all duration-200 active:scale-95 border ${
                         isSelected
                           ? 'bg-[#881337] text-white border-[#881337] shadow-md scale-105'
                           : 'bg-[#FFF5F7] text-[#4A0420] border-[#FBCFE8] hover:bg-[#FFE4E6]'
@@ -416,7 +418,7 @@ export const FamilyPlanningSystem: React.FC<FamilyPlanningSystemProps> = ({
                 </div>
               </div>
 
-              {/* Reassuring Sisterhood Metrics Badges */}
+              {/* Method summary */}
               <div className="grid grid-cols-2 gap-2">
                 <div className="bg-[#FFF5F7] rounded-2xl p-3 border border-[#FBCFE8] flex items-center gap-2.5 min-w-0">
                   <div className="w-8 h-8 rounded-xl bg-white text-[#881337] flex items-center justify-center shrink-0 shadow-2xs">
@@ -504,7 +506,7 @@ export const FamilyPlanningSystem: React.FC<FamilyPlanningSystemProps> = ({
                       className="text-[10px] font-black text-[#881337] underline flex items-center gap-1"
                     >
                       <Building2 className="w-3 h-3 text-[#E11D48]" />
-                      <span>Find Clinics</span>
+                      <span>{lang === 'om' ? 'Buufata barbaadi' : lang === 'am' || lang === 'har' ? 'ጤና ጣቢያ ፈልግ' : 'Find a health facility'}</span>
                     </button>
                   )}
                 </div>
@@ -541,7 +543,7 @@ export const FamilyPlanningSystem: React.FC<FamilyPlanningSystemProps> = ({
                 ? 'የማንም ጫና ሳይኖርበት፤ ለጤናዎ እና ለኑሮዎ የሚሆነውን ይወቁ'
                 : lang === 'om'
                 ? 'Dhiibbaa tokko malee; fayyaa fi jireenya keessaniif kan ta’u'
-                : 'Personalized clinical match tailored to your body and lifestyle'}
+                : 'This is a discussion guide, not a prescription. A health worker must review medical history and eligibility.'}
             </p>
           </div>
 
@@ -727,13 +729,22 @@ export const FamilyPlanningSystem: React.FC<FamilyPlanningSystemProps> = ({
                         ? 'ለእርስዎ ተመራጭ ዘዴ'
                         : lang === 'om'
                         ? 'Mala Isiniif Filatame'
-                        : 'Top Tailored Recommendation'}
+                        : 'Method To Discuss'}
                     </span>
                     <h4 className="text-xl font-black text-white">
                       {resolveText(rec.name, lang)}
                     </h4>
                     <p className="text-xs text-rose-100 leading-relaxed">
                       {resolveText(rec.shortDesc, lang)}
+                    </p>
+                    <p className="text-xs text-amber-100 leading-relaxed border-t border-white/15 pt-3">
+                      {lang === 'am'
+                        ? 'ይህ ምክር ብቻ ነው። ትክክለኛ የወሊድ መቆጣጠሪያ የጤና ባለሙያ ካገናዘበ በኋላ ይሰጣል።'
+                        : lang === 'om'
+                        ? 'Kun gorsa qofaa dha. Mala sirrii ta’e ogeessa fayyaa seenaa fayyaa fi haala fayyaa ilaalchisee murteessu qaba.'
+                        : lang === 'har'
+                        ? 'ይህ ምክር ብቻ ነው። ትክክለኛ የወሊድ መቆጣጠሪያ የጤና ባለሙያ ካገናዘበ በኋላ ይሰጣል።'
+                        : 'For discussion only. A qualified health worker should confirm eligibility and suitability before use.'}
                     </p>
 
                     <div className="flex items-center gap-2 pt-2 flex-wrap">

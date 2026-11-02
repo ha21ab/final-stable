@@ -6,6 +6,7 @@ import { VitePWA } from 'vite-plugin-pwa';
 
 export default defineConfig(() => {
   return {
+    base: '/final-stable/',
     plugins: [
       react(),
       tailwindcss(),
@@ -13,7 +14,7 @@ export default defineConfig(() => {
         registerType: 'autoUpdate',
         includeAssets: ['icon.svg', 'apple-touch-icon.png', 'pwa-192x192.png', 'pwa-512x512.png'],
         manifest: {
-          id: '/',
+          id: '/final-stable/',
           name: 'Mela Care · መላ ኬር',
           short_name: 'Mela Care',
           description: 'Voice-first maternal pregnancy danger signs triage and confidential family planning system in Ethiopia.',
@@ -21,8 +22,8 @@ export default defineConfig(() => {
           background_color: '#FFF5F7',
           display: 'standalone',
           orientation: 'portrait-primary',
-          start_url: '/',
-          scope: '/',
+          start_url: '/final-stable/',
+          scope: '/final-stable/',
           icons: [
             {
               src: '/pwa-192x192.png',

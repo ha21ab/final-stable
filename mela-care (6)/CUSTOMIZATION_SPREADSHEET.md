@@ -31,7 +31,7 @@
 ## TABLE 3: VISUAL ASSETS (IMAGES & LOGO)
 | Asset Key | Current File Name | File Path | Current Aspect / Theme | How to Replace with Your Custom Image / Logo |
 | :--- | :--- | :--- | :--- | :--- |
-| `App Logo Icon` | Inlined Heart Icon | `src/App.tsx` (lines 107–109) | Glowing rose heart glyph | Replace with an `<img>` tag pointing to `src/assets/images/your_logo.png`. |
+| `App Logo Icon` | Integrated Mela mark | `public/mela-mark.png`, `src/App.tsx` | Transparent burgundy heart-and-person brand mark | Replace `public/mela-mark.png` or update the `/mela-mark.png` reference in `src/App.tsx`. |
 | `Hero Sanctuary Banner` | `ethiopian_maternal_hero_1793061211046.jpg` | `src/assets/images/` | Ethiopian mother holding healthy newborn with Habesha dress | Replace file with your preferred hospital/NGO hero photograph. |
 | `Body Silhouette Triage Map` | `maternal_silhouette_map_1793061212776.jpg` | `src/assets/images/` | Anatomical female silhouette with red glowing touch targets | Replace file with custom clinical illustration of pregnant anatomy. |
 | `Safe Delivery Kit Art` | `ethiopian_birth_delivery_kit_1793105802113.jpg` | `src/assets/images/` | 7 items inside delivery basket (razor, cord tie, soap, towels, ANC card) | Replace with real photo of Ethiopian Health Extension birth kit. |
@@ -79,3 +79,64 @@
 | **Implants / Jadelle** | የክንድ ውስጥ መከላከያ (ኢምፕላንት - ለ3 ወይም 5 ዓመታት) | Waraantoo Irree (Waggaa 3-5) | Confirm whether mothers refer to it colloquially as *"Norplant"*, *"Jadelle"*, or *"Waraantoo"*. | `src/data/maternalData.ts` |
 | **Injectable (Depo)**| የ3 ወር መርፌ (ዴፖ ፕሮቬራ) | Lilmoo Ji’a 3 (Sayikiloon) | In some regions known simply as *"Lilmoo"* or *"Qodaa ji'a sadii"*. | `src/data/maternalData.ts` |
 | **IUD / Copper Loop**| የማህፀን ሉፕ (ኮይል - ለ10 ዓመታት) | Luuppii Gadameessaa (Waggaa 10) | Confirm whether women call it *"Loop"* or *"Qaxxaamura"*. | `src/data/maternalData.ts` |
+
+---
+
+## TABLE 6: BRAND, TITLE, METADATA & PWA SETTINGS
+| Item | Current Value | File Path | Notes |
+| :--- | :--- | :--- | :--- |
+| App name | `Mela Care · መላ ኬር` | `vite.config.ts` | Name shown in the installable PWA manifest. |
+| Short app name | `Mela Care` | `vite.config.ts` | Home-screen and launcher label. |
+| Browser title | `Mela Care — Pregnancy, Family Planning & Emergency Support` | `index.html` | Update search/social metadata together. |
+| Theme color | `#881337` | `index.html`, `vite.config.ts`, `src/index.css` | Burgundy theme color; update matching UI values together. |
+| Background color | `#FFF5F7` | `vite.config.ts`, `src/index.css` | Used by the PWA splash/background surface. |
+| Header mark | `public/mela-mark.png` | `src/App.tsx` | Primary compact brand mark. |
+| Lockup | `public/mela-lockup.png` | Brand asset directory | Use on spacious splash, about, or sharing surfaces. |
+| PWA icons | `public/pwa-192x192.png`, `public/pwa-512x512.png`, `public/pwa-maskable-512x512.png` | `vite.config.ts`, `index.html` | Rebuild from the source brand tile after logo changes. |
+| Apple touch icon | `public/apple-touch-icon.png` | `index.html` | Square icon without transparency around important content. |
+| Favicon | `public/pwa-192x192.png` | `index.html` | Replace or add a dedicated small favicon if needed. |
+| Brand preparation script | `scripts/prepare_brand_assets.py` | Project scripts | Reprocess the transparent mark and regenerate icon sizes. |
+
+---
+
+## TABLE 7: VOICE RECORDINGS, AUDIO & SPOKEN TEXT
+| Voice / Audio Item | Current Implementation | File / Data Location | Manual Input Needed Later |
+| :--- | :--- | :--- | :--- |
+| Browser spoken output | Web Speech API with language selection | `src/utils/audio.ts` | Add approved recordings only if browser speech synthesis is unacceptable. |
+| Amharic / Oromo / English text | Central localized text objects | `src/data/maternalData.ts`, `src/data/clinics.ts`, `src/components/*.tsx` | Add matching medically approved recordings and audio fields. |
+| Harari spoken welcome | Placeholder/fallback wording | `src/components/MaternalHome.tsx`, `src/utils/compass.ts` | Add a native voice recording and matching Harari text. |
+| Danger-sign readout | `spokenAudio` fields | `src/data/maternalData.ts` | Add separate approved recordings if browser synthesis is not acceptable. |
+| Family-planning readout | `spokenAudio` fields | `src/data/maternalData.ts` | Add approved local-language recordings. |
+| Kick confirmation chime | Generated Web Audio tone | `src/components/KickTapper.tsx` | Optional replacement; no external file is currently required. |
+| Contraction breathing guide | Generated browser audio guidance | `src/components/ContractionTimer.tsx` | Optional recording using calm, non-prescriptive copy. |
+
+---
+
+## TABLE 8: DEPLOYMENT, TELEGRAM & OPERATIONAL SETTINGS
+| Item | Current Value / Behavior | File Path | Action Required |
+| :--- | :--- | :--- | :--- |
+| Production domain | Not configured | Hosting account / `vercel.json` | Add the final HTTPS domain after deployment. |
+| SPA routing | `/index.html` fallback plus `/api/*` rewrite | `vercel.json` | Confirm preview and production routes. |
+| Facilities API | Static server data | `server.ts`, `api/index.ts` | Replace with a verified database/CMS or explicitly maintained regional records. |
+| Facility verification | Marked as requiring local verification | `server.ts`, `src/components/FacilityDirectory.tsx` | Verify each phone, maternity service, hour, and ambulance claim before launch. |
+| Telegram bot | No public bot credential is required in frontend source | Telegram Bot settings / environment variables | Configure the bot and set the Mini App URL to the final HTTPS deployment. |
+| Telegram SDK | Feature-detected browser fallback | `src/utils/telegram.ts`, `index.html` | Test inside Telegram, not only in an ordinary browser. |
+| Offline cache policy | Facility and app data may be cached by the service worker | `vite.config.ts` | Decide retention/update behavior for maternal and facility information. |
+| Environment variables | None documented in this spreadsheet | `.env`, hosting dashboard | Add deployment secrets only outside frontend source. |
+| Service worker updates | Automatic update registration | `vite.config.ts` | Test old installed clients and cache updates. |
+| Medical review ownership | Not yet assigned | Clinical review/sign-off document | Obtain Ethiopian obstetric and Ministry-approved review before public clinical claims. |
+
+---
+
+## COMPLETENESS NOTE
+This spreadsheet is a manual customization checklist, but it is not the sole source for all text changes.
+
+Major localized and clinical content also remains in:
+
+- `src/data/maternalData.ts`
+- `src/data/clinics.ts`
+- `src/components/*.tsx`
+- `src/utils/compass.ts`
+- `server.ts`
+
+Before Harari or clinical launch, separately verify every fallback string, `[HARARI_SLOT]`, medical threshold, facility availability, phone number, voice recording, and emergency claim. The spreadsheet should be used together with these source files, not as a substitute for localized source review.

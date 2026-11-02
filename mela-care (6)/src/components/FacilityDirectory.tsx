@@ -65,8 +65,8 @@ export const FacilityDirectory: React.FC<FacilityDirectoryProps> = ({
       type: typeof c.type === 'string' ? c.type : resolveText(c.type, lang) || 'Referral Hospital',
       phone: c.phone,
       emergencyHotline: '907',
-      has24hMaternity: true,
-      hasAmbulanceStation: true,
+      has24hMaternity: false,
+      hasAmbulanceStation: c.id === 'ambulance_907',
     }));
     const filtered =
       selectedRegion === 'all'
@@ -137,10 +137,10 @@ export const FacilityDirectory: React.FC<FacilityDirectoryProps> = ({
               </h3>
               <span className="text-[11px] text-rose-200 block">
                 {lang === 'am'
-                  ? 'የ24 ሰዓት የእርግዝና ድንገተኛ ክፍል እና አምቡላንስ'
+                  ? 'የሆስፒታል ማውጫ — በግንኙነት ያለምንም እንዲሆን ያረጋግጡ'
                   : lang === 'om'
-                  ? 'Tajaajila ciniinsuu fi hatattamaa sa’aatii 24'
-                  : '24/7 Obstetric emergency & ambulance dispatch'}
+                  ? 'Galmee hospitaalaa — yeroo dhiyeessa mirkaneessaa'
+                  : 'Facility directory — call to verify current availability'}
               </span>
             </div>
           </div>
@@ -230,8 +230,8 @@ export const FacilityDirectory: React.FC<FacilityDirectoryProps> = ({
                     </span>
                   </div>
 
-                  <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 shrink-0">
-                    {lang === 'am' ? 'የ24 ሰዓት ወሊድ' : lang === 'om' ? 'Deessummaa 24/7' : '24/7 Maternity'}
+                  <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-amber-50 text-amber-900 border border-amber-200 shrink-0">
+                    {lang === 'am' ? 'አቅርቦትን ይሞክሩ' : lang === 'om' ? 'Tajaajila mirkaneessaa' : 'Verify availability'}
                   </span>
                 </div>
 
@@ -240,14 +240,14 @@ export const FacilityDirectory: React.FC<FacilityDirectoryProps> = ({
                   <span className="flex items-center gap-1 bg-[#FFF5F7] px-2.5 py-1 rounded-md border border-[#FBCFE8]">
                     <Clock className="w-3 h-3 text-[#E11D48]" />
                     <span>
-                      {lang === 'am' ? 'የ24 ሰዓት ድንገተኛ ክፍል' : lang === 'om' ? 'Yaala Hatattamaa 24/7' : '24/7 Emergency Delivery'}
+                      {lang === 'am' ? 'አሁን ሰዓትን ያረጋግጡ' : lang === 'om' ? 'Sa’aatii amma mirkaneessaa' : 'Call to confirm hours'}
                     </span>
                   </span>
                   {facility.hasAmbulanceStation && (
                     <span className="flex items-center gap-1 bg-red-50 text-[#991B1B] px-2.5 py-1 rounded-md border border-red-200">
                       <Ambulance className="w-3 h-3 text-[#DC2626]" />
                       <span>
-                        {lang === 'am' ? 'የ907 አምቡላንስ ጣቢያ' : lang === 'om' ? 'Buufata Ambulaansii 907' : '907 Ambulance Base'}
+                        {lang === 'am' ? '907 አምቡላንስ — ያረጋግጡ' : lang === 'om' ? 'Ambulaansii 907 — mirkaneessi' : '907 Ambulance — verify locally'}
                       </span>
                     </span>
                   )}

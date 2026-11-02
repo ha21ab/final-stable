@@ -656,7 +656,7 @@ export const BirthKitChecklist: React.FC<BirthKitChecklistProps> = ({
               ? 'የአምቡላንስ ድንገተኛ ጥሪ'
               : lang === 'om'
               ? 'Waamicha Hatattamaa Ambulaansii'
-              : 'National Ambulance Dispatch'}
+              : 'Emergency transport: call 907'}
           </span>
           <p className="text-sm font-black truncate">
             {lang === 'am'

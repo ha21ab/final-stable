@@ -5,8 +5,8 @@ import { AppLanguage, MultilingualText } from '../types';
  */
 export function resolveText(text: MultilingualText, lang: AppLanguage): string {
   if (lang === 'har') {
-    if (text.har && text.har.trim() !== '') {
-      return text.har.replace(/\s*\[(?:HARARI_SLOT|Slot|Harari Slot)\]/gi, '').trim();
+    if (text.har && text.har.trim() !== '' && !/\[(?:HARARI_SLOT|Slot|Harari Slot)\]/i.test(text.har)) {
+      return text.har.trim();
     }
     return text.am || text.en;
   }
@@ -15,9 +15,10 @@ export function resolveText(text: MultilingualText, lang: AppLanguage): string {
 
 /**
  * Evaluates the kick-counting session for fetal wellbeing.
- * Standard WHO / Ethiopian MoH guideline:
- * - 10 kicks within 2 hours (120 minutes) = healthy activity.
- * - Under 10 kicks after 120 mins = seek immediate clinic evaluation.
+ * This is a tracking aid only, not a diagnosis.
+ * The fixed 10-movement/2-hour threshold can be inappropriate for
+ * individual pregnancies; follow a clinician’s plan and seek urgent
+ * advice when movement is reduced compared with the mother’s normal pattern.
  */
 export function evaluateKickSession(
   kicks: number,
@@ -30,7 +31,7 @@ export function evaluateKickSession(
     return {
       status: 'healthy',
       message: {
-        en: 'Baby is active and responsive! You reached 10 kicks. Great job resting today.',
+        en: '10 movements recorded. This is a personal tracking result, not a diagnosis—follow your maternity care plan.',
         am: 'ህፃኑ ጤናማና ንቁ ነው! 10 እንቅስቃሴዎች ተመዝግበዋል። ጥሩ እረፍት አድርገዋል።',
         om: 'Daa’imni keessan nagaafi jabaadha! Sochii 10 galmeessitaniittu.',
         har: 'ህፃኑ ጤናማና ንቁ ነው [HARARI_SLOT]',
@@ -42,7 +43,7 @@ export function evaluateKickSession(
     return {
       status: 'alert',
       message: {
-        en: 'Warning: Fewer than 10 kicks in 2 hours. Please visit your health centre or midwife now.',
+        en: 'Fewer than 10 movements recorded in 2 hours. Contact your midwife or health centre now, especially if this is less than usual.',
         am: 'ማስጠንቀቂያ፦ በ2 ሰዓት ውስጥ ከ10 እንቅስቃሴ በታች ነው። እባክዎ አሁኑኑ ወደ ጤና ጣቢያ ይሂዱ።',
         om: 'Akeekkachiisa: Sa’aatii 2 keessatti sochii 10 gadi. Amma gara buufata fayyaa deemaa.',
         har: 'ማስጠንቀቂያ፦ አሁኑኑ ወደ ጤና ጣቢያ ይሂዱ [HARARI_SLOT]',

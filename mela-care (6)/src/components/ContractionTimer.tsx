@@ -9,6 +9,7 @@ import {
   PhoneCall,
   Clock,
   Sparkles,
+  Wind,
 } from 'lucide-react';
 import { AppLanguage } from '../types';
 import { triggerHaptic } from '../utils/telegram';
@@ -33,6 +34,8 @@ export const ContractionTimer: React.FC<ContractionTimerProps> = ({
   const [currentStartTime, setCurrentStartTime] = useState<number | null>(null);
   const [currentDuration, setCurrentDuration] = useState<number>(0);
   const [history, setHistory] = useState<ContractionRecord[]>([]);
+  const [showBreathing, setShowBreathing] = useState(false);
+  const [breathStep, setBreathStep] = useState(0);
 
   useEffect(() => {
     let interval: number;
@@ -43,6 +46,14 @@ export const ContractionTimer: React.FC<ContractionTimerProps> = ({
     }
     return () => clearInterval(interval);
   }, [isActive, currentStartTime]);
+
+  useEffect(() => {
+    if (!showBreathing) return;
+    const breathInterval = window.setInterval(() => {
+      setBreathStep((step) => (step + 1) % 10);
+    }, 1000);
+    return () => window.clearInterval(breathInterval);
+  }, [showBreathing]);
 
   const handleToggle = () => {
     if (!isActive) {
@@ -81,6 +92,8 @@ export const ContractionTimer: React.FC<ContractionTimerProps> = ({
     setCurrentStartTime(null);
     setCurrentDuration(0);
     setHistory([]);
+    setShowBreathing(false);
+    setBreathStep(0);
   };
 
   // Evaluate 5-1-1 Rule: contractions ~5 mins apart, ~60s duration, over last few logs
@@ -100,17 +113,17 @@ export const ContractionTimer: React.FC<ContractionTimerProps> = ({
         <div>
           <span className="text-[10px] font-bold text-[#9D174D] uppercase tracking-wider block">
             {lang === 'am' || lang === 'har'
-              ? 'የምጥ እና የቁርጠት ምት ቆጣሪ'
+              ? 'የምጥ ቆጣሪ'
               : lang === 'om'
               ? 'Lakkooftuu Yeroo Ciniinsuu'
               : 'Labor Contraction Interval Timer'}
           </span>
           <h3 className="text-lg font-black text-[#4A0420]">
             {lang === 'am' || lang === 'har'
-              ? 'የ5-1-1 የወሊድ ደንብ'
+              ? 'የምጥ ቆጣሪ'
               : lang === 'om'
               ? 'Seera Ciniinsuu 5-1-1'
-              : 'The 5-1-1 Labor Rule'}
+              : 'Labor Timer'}
           </h3>
         </div>
 
@@ -175,6 +188,76 @@ export const ContractionTimer: React.FC<ContractionTimerProps> = ({
         </button>
       </div>
 
+      {/* Optional calm-breathing companion kept separate from clinical timing */}
+      <div className="border border-[#FBCFE8] rounded-2xl overflow-hidden bg-white">
+        <button
+          type="button"
+          onClick={() => {
+            setShowBreathing((visible) => !visible);
+            setBreathStep(0);
+            triggerHaptic('selection');
+          }}
+          className="w-full px-3 py-2.5 flex items-center justify-between gap-2 text-left"
+          aria-expanded={showBreathing}
+        >
+          <span className="flex items-center gap-2">
+            <span className="w-8 h-8 rounded-xl bg-teal-50 text-teal-700 flex items-center justify-center">
+              <Wind className="w-4 h-4" />
+            </span>
+            <span>
+              <span className="block text-xs font-black text-[#4A0420]">
+                {lang === 'am'
+                  ? 'ለእረፍት የመተንፈስ ልምምድ'
+                  : lang === 'om'
+                  ? 'Qubee Hafuuraaf'
+                  : 'Calm breathing'}
+              </span>
+              <span className="block text-[10px] text-[#783A4E]">
+                {lang === 'am'
+                  ? 'ነፃ ለማረፍ፣ የጊዜ ቆጣሪውን አይደፍርም'
+                  : lang === 'om'
+                  ? 'Hafuraa boqochuu; sa’aatii hin mudaas'
+                  : 'Optional comfort while you wait'}
+              </span>
+            </span>
+          </span>
+          <span className="text-[11px] font-bold text-teal-700">
+            {showBreathing
+              ? (lang === 'am' ? 'ዝጋ' : lang === 'om' ? 'Cufi' : 'Close')
+              : (lang === 'am' ? 'ክፈት' : lang === 'om' ? 'Banami' : 'Open')}
+          </span>
+        </button>
+
+        {showBreathing && (
+          <div className="px-3 pb-3">
+            <div className="rounded-xl bg-teal-50 border border-teal-100 py-4 px-3 flex items-center gap-3">
+              <div
+                className={`w-14 h-14 shrink-0 rounded-full border-4 border-teal-200 bg-white flex items-center justify-center transition-transform duration-1000 ${
+                  breathStep < 4 ? 'scale-110' : 'scale-75'
+                }`}
+                aria-hidden="true"
+              >
+                <Wind className="w-5 h-5 text-teal-700" />
+              </div>
+              <div className="min-w-0">
+                <p className="text-sm font-black text-teal-900">
+                  {breathStep < 4
+                    ? (lang === 'am' ? 'ቀስ ብለው ውስጥ ይተነፍሱ' : lang === 'om' ? 'Hafuurii afuufi — suuta' : 'Breathe in slowly')
+                    : (lang === 'am' ? 'አውጣ  — በቀስታ' : lang === 'om' ? 'Hafuurii baasi — suuta' : 'Breathe out gently')}
+                </p>
+                <p className="text-[11px] text-teal-800 mt-0.5">
+                  {lang === 'am'
+                    ? '4 ሰከንድ ወደ ውስጥ፣ 6 ሰከንድ ወደ ውጭ። በምቾትዎ ይሰሩ።'
+                    : lang === 'om'
+                    ? 'Sek. 4 afuufi, sek. 6 baasii. Akkuma mijataan taphadhaa.'
+                    : '4 seconds in, 6 seconds out. Follow only what feels comfortable.'}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+
       {/* 5-1-1 Clinical Triage Status */}
       {is511Labor ? (
         <div className="p-4 bg-red-50 rounded-2xl border-2 border-[#DC2626] text-red-950 space-y-2">
@@ -182,18 +265,18 @@ export const ContractionTimer: React.FC<ContractionTimerProps> = ({
             <AlertCircle className="w-5 h-5 text-[#DC2626] animate-bounce shrink-0" />
             <span>
               {lang === 'am' || lang === 'har'
-                ? 'የወሊድ ጊዜ ደርሷል! (ትክክለኛ ምጥ)'
+                ? 'የጊዜ መለኪያ ህክምና ቅድመ-ግምገማ'
                 : lang === 'om'
-                ? 'Yeroon Da’umsaa Gaheera! (Ciniinsuu Dhugaa)'
-                : 'True Active Labor! Hospital Dispatch Recommended'}
+                ? 'Tarkaanfii Ciniinsuu Haala Maamiltootti Qabsa’e'
+                : 'Pattern worth calling about'}
             </span>
           </div>
           <p className="text-xs leading-relaxed font-semibold">
             {lang === 'am' || lang === 'har'
-              ? 'ቁርጠትዎ በየ5 ደቂቃው እየመጣ ለ1 ደቂቃ የሚቆይ ነው። አሁኑኑ የወሊድ ቦርሳዎን ይዘው ወደ ሆስፒታል ይሂዱ ወይም 907 ይደውሉ።'
+              ? 'ይህ በቁርጠት ማቆጠር ላይ የሚገኝ ንድፍ ነው። የህክምና ባለሙያዎ ወይም የእርግዝና ክፍል ደንብን ይከተሉ እና 907 ያነጋግሩ።'
               : lang === 'om'
-              ? 'Ciniinsuun keessan daqiiqaa 5n 5tti kan dhufuudha. Battalumatti boorsaa keessan qabattanii gara hospitaalaa deemaa!'
-              : 'Your contractions meet the 5-1-1 clinical standard. Grab your birth bag and head to the hospital immediately!'}
+              ? 'Kun akkaataa lakkooftuu yeroo agarsiisa. Qajeelfama ogeessa fayyaa duukaa bu’aa; yoo daangeffamu 907 bilbilaa.'
+              : 'This pattern warrants contacting your maternity unit for guidance. Follow their instructions and call 907 if they advise emergency transport.'}
           </p>
           <button
             type="button"

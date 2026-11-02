@@ -6,15 +6,15 @@ import {
   CheckCircle2,
   Clock,
   Sparkles,
-  Gamepad2,
   CalendarCheck,
   Volume2,
+  Gamepad2,
 } from 'lucide-react';
 import { AppLanguage } from '../types';
 import { evaluateKickSession, resolveText } from '../utils/compass';
 import { AudioOrb } from './AudioOrb';
-import { SisterhoodTicTacToe } from './SisterhoodTicTacToe';
 import { triggerHaptic } from '../utils/telegram';
+import { WaitingCompanion } from './SisterhoodTicTacToe';
 
 interface KickTapperProps {
   lang: AppLanguage;
@@ -23,6 +23,7 @@ interface KickTapperProps {
 
 export const KickTapper: React.FC<KickTapperProps> = ({ lang, onEmergencyClick }) => {
   const [activeTab, setActiveTab] = useState<'live' | 'manual'>('live');
+  const [showWaitingActivity, setShowWaitingActivity] = useState(false);
 
   // Live session state
   const [kickCount, setKickCount] = useState<number>(0);
@@ -112,7 +113,7 @@ export const KickTapper: React.FC<KickTapperProps> = ({ lang, onEmergencyClick }
               ? 'የፅንስ እንቅስቃሴ ምት'
               : lang === 'om'
               ? 'Rukuttaa Sochii Mucaa'
-              : 'Kick Rhythm Tapper'}
+              : 'Fetal Movement Counter'}
           </h3>
         </div>
 
@@ -160,13 +161,12 @@ export const KickTapper: React.FC<KickTapperProps> = ({ lang, onEmergencyClick }
               : 'text-[#783A4E] hover:text-[#4A0420]'
           }`}
         >
-          <Gamepad2 className="w-3.5 h-3.5" />
           <span>
             {lang === 'am' || lang === 'har'
-              ? 'ቀጥታ መቁጠሪያ & ጨዋታ'
+              ? 'ቀጥታ መቁጠሪያ'
               : lang === 'om'
-              ? 'Lakkoofsa & Tapha'
-              : 'Live Tap & Rest Game'}
+              ? 'Lakkoofsa'
+              : 'Live Counter'}
           </span>
         </button>
 
@@ -193,7 +193,7 @@ export const KickTapper: React.FC<KickTapperProps> = ({ lang, onEmergencyClick }
         </button>
       </div>
 
-      {/* TAB 1: LIVE COUNTING WITH PROMINENT TOP BUTTON + SISTERHOOD TIC-TAC-TOE */}
+      {/* TAB 1: LIVE KICK COUNTER */}
       {activeTab === 'live' && (
         <div className="space-y-4">
           {/* Prominent Tap Button */}
@@ -258,15 +258,33 @@ export const KickTapper: React.FC<KickTapperProps> = ({ lang, onEmergencyClick }
                   : `Session time: ~${elapsedMinutes} mins (Target: 10 kicks within 120 mins)`}
               </span>
             </div>
+
+            <div className="mt-3 w-full max-w-sm">
+              <button
+                type="button"
+                onClick={() => setShowWaitingActivity((visible) => !visible)}
+                aria-expanded={showWaitingActivity}
+                className="w-full min-h-11 rounded-xl border border-[#E8CDD6] bg-[#FFF8FA] px-3 text-xs font-black text-[#881337] flex items-center justify-between active:scale-[0.99] transition-all"
+              >
+                <span className="flex items-center gap-2">
+                  <Gamepad2 className="w-4 h-4" />
+                  {lang === 'am' || lang === 'har'
+                    ? 'በሚጠብቁበት ጊዜ ይዝናኑ'
+                    : lang === 'om'
+                    ? 'Haga eeggattaniitti boqadhaa'
+                    : 'Pass the waiting time'}
+                </span>
+                <span aria-hidden="true">{showWaitingActivity ? '−' : '+'}</span>
+              </button>
+
+              {showWaitingActivity && (
+                <div className="mt-2 animate-in fade-in">
+                  <WaitingCompanion lang={lang} />
+                </div>
+              )}
+            </div>
           </div>
 
-          {/* Integrated Resting Game: Tic-Tac-Toe */}
-          <SisterhoodTicTacToe
-            lang={lang}
-            onMoveMade={() => {
-              // subtle interaction confirmation
-            }}
-          />
         </div>
       )}
 

@@ -3,14 +3,14 @@ import { RotateCcw, Sparkles } from 'lucide-react';
 import { AppLanguage } from '../types';
 import { triggerHaptic } from '../utils/telegram';
 
-interface SisterhoodTicTacToeProps {
+interface WaitingCompanionProps {
   lang: AppLanguage;
   onMoveMade?: () => void;
 }
 
 type Player = '🌸' | '🤍' | null;
 
-export const SisterhoodTicTacToe: React.FC<SisterhoodTicTacToeProps> = ({
+export const WaitingCompanion: React.FC<WaitingCompanionProps> = ({
   lang,
   onMoveMade,
 }) => {
@@ -55,14 +55,14 @@ export const SisterhoodTicTacToe: React.FC<SisterhoodTicTacToeProps> = ({
     setBoard(newBoard);
     setIsPlayerTurn(false);
 
-    // AI Sister companion turn after 400ms delay
+    // Quiet companion turn after a short delay
     setTimeout(() => {
       const emptyIndices = newBoard
         .map((val, idx) => (val === null ? idx : null))
         .filter((val): val is number => val !== null);
 
       if (emptyIndices.length > 0) {
-        // Simple playful AI: prefer center or pick random
+        // Prefer the center, otherwise make a simple random move
         const chosen = emptyIndices.includes(4) && Math.random() > 0.4
           ? 4
           : emptyIndices[Math.floor(Math.random() * emptyIndices.length)];
@@ -93,10 +93,10 @@ export const SisterhoodTicTacToe: React.FC<SisterhoodTicTacToeProps> = ({
           <Sparkles className="w-3.5 h-3.5 text-[#E11D48]" />
           <span className="text-xs font-black text-[#881337]">
             {lang === 'am' || lang === 'har'
-              ? 'እያረፉ የሚጫወቱት ጨዋታ (XO)'
+              ? 'ጊዜውን ለማሳለፍ XO ጨዋታ'
               : lang === 'om'
-              ? 'Taphadhaatii Boqodhaa (XO)'
-              : 'Calm Resting Game (Tic-Tac-Toe)'}
+              ? 'Yeroo darbuu Taphicha XO'
+              : 'Calm waiting activity (Tic-Tac-Toe)'}
           </span>
         </div>
         <button
@@ -112,10 +112,10 @@ export const SisterhoodTicTacToe: React.FC<SisterhoodTicTacToeProps> = ({
 
       <p className="text-[11px] text-[#783A4E] leading-tight">
         {lang === 'am' || lang === 'har'
-          ? 'እርስዎ 🌸 ነዎት፤ ረጋ ብለው እየተጫወቱ ህፃኑ ሲንቀሳቀስ ከላይ ያለውን አዝራር ይጫኑ!'
+          ? 'እርስዎ 🌸 ነዎት፤ በዚህ ጨዋታ ሳረፉ ህፃኑ እንቅስቃሴ ሲሰማዎት ከላይ ያለውን አዝራር ይጫኑ።'
           : lang === 'om'
-          ? 'Isin 🌸 dha; taphachaa yeroo daa’imni socho’u olitti tuqaa!'
-          : 'You are 🌸. Relax and play while waiting; tap the big kick button above whenever you feel a kick!'}
+          ? 'Isin 🌸 dha; taphachaa yeroo daa’imni socho’u tuqa gara olitti jiru tuqaa!'
+          : 'You are 🌸. Play calmly while you wait, and tap the kick button whenever you feel movement.'}
       </p>
 
       {/* 3x3 Board */}
@@ -156,7 +156,7 @@ export const SisterhoodTicTacToe: React.FC<SisterhoodTicTacToeProps> = ({
           <span className="text-[11px] text-[#783A4E]">
             {isPlayerTurn
               ? lang === 'am' || lang === 'har' ? 'ተራዎ ነው (🌸)' : lang === 'om' ? 'Dabaree keessan (🌸)' : 'Your turn (🌸)'
-              : lang === 'am' || lang === 'har' ? 'የእህት ረዳት እያሰበች ነው... (🤍)' : lang === 'om' ? 'Deggarsa yaadaa jira... (🤍)' : 'Sister companion thinking... (🤍)'}
+              : lang === 'am' || lang === 'har' ? 'ጓደኛ እያሰበች ነው... (🤍)' : lang === 'om' ? 'Hiriyyaan yaadaa jira... (🤍)' : 'Companion thinking... (🤍)'}
           </span>
         )}
       </div>

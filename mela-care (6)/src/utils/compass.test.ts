@@ -18,7 +18,7 @@ test('resolveText handles English, Amharic, Oromo, and Harari placeholder', () =
   assert.equal(resolveText(sample, 'en'), 'Emergency');
   assert.equal(resolveText(sample, 'am'), 'ድንገት');
   assert.equal(resolveText(sample, 'om'), 'Hatattama');
-  assert.equal(resolveText(sample, 'har'), 'አስቸኳይ');
+  assert.equal(resolveText(sample, 'har'), 'ድንገት');
 
   // Harari empty fallback
   const emptyHarari = {
@@ -33,13 +33,13 @@ test('resolveText handles English, Amharic, Oromo, and Harari placeholder', () =
 test('evaluateKickSession identifies healthy completion at 10 kicks', () => {
   const result = evaluateKickSession(10, 45);
   assert.equal(result.status, 'healthy');
-  assert.ok(result.message.en.includes('10 kicks'));
+  assert.ok(result.message.en.includes('10 movements'));
 });
 
 test('evaluateKickSession alerts when under 10 kicks after 120 minutes', () => {
   const result = evaluateKickSession(4, 125);
   assert.equal(result.status, 'alert');
-  assert.ok(result.message.en.includes('Warning'));
+  assert.ok(result.message.en.includes('Contact'));
 });
 
 test('calculateGestationalMoon maps months to trimesters correctly', () => {
