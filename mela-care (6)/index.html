@@ -16,11 +16,12 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="Mela Care" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https:; connect-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
     <link rel="apple-touch-icon" href="%BASE_URL%apple-touch-icon.png" />
     <link rel="icon" type="image/png" href="%BASE_URL%pwa-192x192.png" />
 
-    <!-- Telegram Bot Mini App (TMA) SDK -->
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <!-- Telegram Bot Mini App SDK pinned and vendored locally. SHA256: 124BDFF7BA3FE86C8BA5143467AFEC21E020405E74ABDB92CFDDA6C0EE3B5908 -->
+    <script src="%BASE_URL%telegram-web-app.js"></script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
