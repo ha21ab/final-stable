@@ -16,6 +16,8 @@ import { DiscreetMask } from './components/DiscreetMask';
 import { FacilityDirectory } from './components/FacilityDirectory';
 import { PWAInstallButton } from './components/PWAInstallButton';
 import { OfflineIndicator } from './components/OfflineIndicator';
+import { PostpartumCare } from './components/PostpartumCare';
+import { SubstanceUseSupport } from './components/SubstanceUseSupport';
 import { audioEngine } from './utils/audio';
 import { initTelegramMiniApp, setupTelegramBackButton, isTelegramMiniApp } from './utils/telegram';
 import {
@@ -25,7 +27,8 @@ import {
   Volume2,
   VolumeX,
   EyeOff,
-  Heart,
+  Leaf,
+  Building2,
 } from 'lucide-react';
 
 export default function App() {
@@ -96,7 +99,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen w-full overflow-x-hidden bg-[#FCFAF8] text-slate-900 flex flex-col font-sans selection:bg-[#FBCFE8]">
+    <div className="mc-app min-h-screen w-full overflow-x-hidden bg-[#FCFAF8] text-slate-900 flex flex-col font-sans selection:bg-[#FBCFE8]">
       {/* Discreet Mask Disguise (Toggled in emergency on shared phone) */}
       <DiscreetMask
         isOpen={isMaskOpen}
@@ -105,7 +108,7 @@ export default function App() {
       />
 
       {/* Top Persistent App Crown */}
-      <header className="sticky top-0 z-40 bg-[#6E1E3A] text-white px-3 sm:px-4 py-2.5 sm:py-3 shadow-md flex items-center justify-between gap-2">
+      <header className="mc-topbar sticky top-0 z-40 bg-[#6E1E3A] text-white px-3 sm:px-4 py-2.5 sm:py-3 shadow-md flex items-center justify-between gap-2">
         <div className="flex items-center gap-2 min-w-0">
           {activeCategory !== null && (
             <button
@@ -160,15 +163,15 @@ export default function App() {
             <EyeOff className="w-4 h-4 text-rose-200" />
           </button>
 
-          {/* SOS Beacon Modal Trigger */}
+          {/* Persistent facility-directory action */}
           <button
             type="button"
-            onClick={handleEmergencyTrigger}
-            className="min-h-11 sm:min-h-0 px-3 py-2.5 sm:py-1.5 rounded-xl sm:rounded-2xl bg-[#DC2626] hover:bg-red-700 active:scale-95 text-white font-black text-xs flex items-center gap-1 shrink-0"
-            aria-label="Emergency SOS flashcard"
+            onClick={() => setIsDirectoryOpen(true)}
+            className="min-h-11 sm:min-h-0 px-3 py-2.5 sm:py-1.5 rounded-xl sm:rounded-2xl bg-white/10 hover:bg-white/20 active:scale-95 text-[#881337] font-black text-xs flex items-center gap-1 shrink-0 border border-[#E8D8DF] shadow-sm"
+            aria-label="Find a health facility"
           >
-            <AlertCircle className="w-3.5 h-3.5 animate-pulse" />
-            <span>{lang === 'am' || lang === 'har' ? 'አደጋ 907' : lang === 'om' ? 'Balaa 907' : 'SOS 907'}</span>
+            <Building2 className="w-3.5 h-3.5" />
+            <span>{lang === 'am' || lang === 'har' ? 'ጤና ጣቢያ' : lang === 'om' ? 'Buufata' : 'Facilities'}</span>
           </button>
         </div>
       </header>
@@ -187,8 +190,8 @@ export default function App() {
           />
         ) : activeCategory === 'danger_signs' ? (
           /* FOCUSED VIEW 1: PREGNANCY DANGER SIGNS & EMERGENCY SYSTEM */
-          <div className="space-y-4">
-            <div className="flex items-center justify-between px-1">
+          <div className="mc-page-screen space-y-4">
+            <div className="mc-page-toolbar flex items-center justify-between px-1">
               <button
                 type="button"
                 onClick={handleGoHome}
@@ -215,10 +218,26 @@ export default function App() {
               onOpenDirectory={() => setIsDirectoryOpen(true)}
             />
           </div>
+        ) : activeCategory === 'postpartum_care' ? (
+          <div className="mc-page-screen space-y-4">
+            <PostpartumCare
+              lang={lang}
+              onGoHome={handleGoHome}
+              onOpenDirectory={() => setIsDirectoryOpen(true)}
+            />
+          </div>
+        ) : activeCategory === 'substance_use' ? (
+          <div className="mc-page-screen space-y-4">
+            <SubstanceUseSupport
+              lang={lang}
+              onGoHome={handleGoHome}
+              onOpenDirectory={() => setIsDirectoryOpen(true)}
+            />
+          </div>
         ) : (
           /* FOCUSED VIEW 2: FAMILY PLANNING & CONTRACEPTIVE SYSTEM */
-          <div className="space-y-4">
-            <div className="flex items-center justify-between px-1">
+          <div className="mc-page-screen space-y-4">
+            <div className="mc-page-toolbar flex items-center justify-between px-1">
               <button
                 type="button"
                 onClick={handleGoHome}
@@ -248,11 +267,12 @@ export default function App() {
       </main>
 
       {/* Bottom sticky navigation */}
-      <footer className="sticky bottom-0 z-30 bg-white border-t border-slate-200 px-3 py-2 shadow-lg">
+      <footer className="mc-bottom-nav sticky bottom-0 z-30 bg-white border-t border-slate-200 px-3 py-2 shadow-lg">
         <div className="max-w-6xl mx-auto grid grid-cols-3 gap-2">
           <button
             type="button"
             onClick={handleGoHome}
+            aria-current={activeCategory === null ? 'page' : undefined}
             className={`min-h-12 flex flex-col items-center justify-center rounded-xl text-xs font-bold ${
               activeCategory === null
                 ? 'bg-[#6E1E3A] text-white'
@@ -266,15 +286,15 @@ export default function App() {
           </button>
           <button
             type="button"
-            onClick={() => handleSelectCategory('family_planning')}
+            onClick={() => handleSelectCategory('substance_use')}
             className={`min-h-12 flex flex-col items-center justify-center rounded-xl text-xs font-bold ${
-              activeCategory === 'family_planning'
+              activeCategory === 'substance_use'
                 ? 'bg-[#E9F5F1] text-[#0F766E]'
                 : 'text-slate-700'
             }`}
           >
-            <Heart className="w-5 h-5" />
-            <span className="mt-0.5">{lang === 'am' ? 'የቤተሰብ ምጣኔ' : lang === 'om' ? 'Karoora Maatii' : 'Family Plan'}</span>
+            <Leaf className="w-5 h-5" />
+            <span className="mt-0.5 text-center">{lang === 'am' || lang === 'har' ? 'የሱስ እገዛ' : lang === 'om' ? 'Mirkaneessaa' : 'Substance'}</span>
           </button>
           <button
             type="button"

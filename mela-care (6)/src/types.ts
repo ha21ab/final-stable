@@ -1,6 +1,6 @@
 export type AppLanguage = 'am' | 'om' | 'en' | 'har';
 
-export type ActiveServiceCategory = 'danger_signs' | 'family_planning' | null;
+export type ActiveServiceCategory = 'danger_signs' | 'family_planning' | 'postpartum_care' | 'substance_use' | null;
 
 export type ToneProfileType =
   | 'URGENT_CALM'

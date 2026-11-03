@@ -140,3 +140,53 @@ Major localized and clinical content also remains in:
 - `server.ts`
 
 Before Harari or clinical launch, separately verify every fallback string, `[HARARI_SLOT]`, medical threshold, facility availability, phone number, voice recording, and emergency claim. The spreadsheet should be used together with these source files, not as a substitute for localized source review.
+
+---
+
+## TABLE 9: MANUAL CHANGES COMPLETED IN THIS BUILD
+
+| Area | Implemented Change | Source |
+| :--- | :--- | :--- |
+| Home-screen structure | Preserved the pregnancy, family-planning, postpartum and quick-tool layout while improving lifecycle filtering and reducing visual redundancy | `src/components/MaternalHome.tsx` |
+| Substance-use page | Added alcohol, tobacco and khat check-ins, a calming timer, safer-day checklist, Ethiopia-specific guidance and urgent-warning guidance | `src/components/SubstanceUseSupport.tsx` |
+| Substance navigation | Replaced the underused Family Plan bottom navigation item with Substance / Wellbeing support; family planning remains available on the home-screen card | `src/App.tsx` |
+| Theme remapping | Replaced weak light-green homepage accents with burgundy/rose-theme accents; substance-use uses the existing green clinical tokens instead of red or burgundy | `src/index.css`, `src/components/MaternalHome.tsx`, `src/components/SubstanceUseSupport.tsx` |
+| Persistent action | Replaced the duplicated header SOS action with a persistent health-facility directory button; the bottom-center emergency action remains the only app-wide SOS button | `src/App.tsx`, `src/components/FacilityDirectory.tsx` |
+| Responsive navigation | Restored visible page back buttons and standardized inner-header wrap behavior at narrow widths | `src/App.tsx`, `src/index.css` |
+| Homepage hover feedback | Added shadow, hue, lift and pressed feedback to language buttons, life-stage buttons, emergency controls, symptom buttons, service cards and quick tools | `src/index.css`, `src/components/MaternalHome.tsx` |
+| Postpartum tools | Added feeding timer, daily-care checklist, rest/hydration actions and postpartum warning checks | `src/components/PostpartumCare.tsx` |
+| Image containment | Added fixed aspect-ratio treatment and `object-fit: contain` for the danger-sign silhouette and guarded visual cards against narrow-screen overflow | `src/index.css`, `src/components/DangerSignsSystem.tsx` |
+| Local images | Added locally bundled counseling, midwife, birth-kit, hemorrhage, preeclampsia and silhouette assets with source documentation | `src/assets/images/ATTRIBUTION.md` |
+
+---
+
+## TABLE 10: CHANGES COMPARED WITH THE PREVIOUS VERSION
+
+| Previous State | Current State | Opportunity Cost / Trade-off |
+| :--- | :--- | :--- |
+| Light-green family-plan card and quick birth-kit accents competed with the theme | Restyled as burgundy/rose or neutral warm accents while retaining functionality | More coherent branding, but less of the previous green differentiation |
+| Family Plan bottom navigation occupied a persistent slot | Persistent Substance support slot added; family planning remains reachable from its homepage card | Improves topical coverage for substance support, but removes family-planning as one-click bottom navigation |
+| Header and bottom navigation both exposed SOS | Header now opens the health-facility directory; bottom navigation remains the only app-wide SOS action | Less duplicated emergency promotion, with facility access available on every screen |
+| Postpartum support was limited or absent in some lifecycle states | Dedicated postpartum page and tools added | Adds useful support but increases route and maintenance surface |
+| Most homepage controls lacked a visible desktop hover state | All language, stage, symptom, service-card and quick-tool controls now have hover and pressed states | Better discoverability; animation is automatically reduced where users prefer reduced motion |
+| Risk of translated labels overflowing at 300–360 px | Added wrap and minimum-width safeguards across headers, grids, cards and buttons | Some compact labels may wrap instead of staying on one line |
+| Inner back controls were hidden or inconsistent | Back button rules were restored and top-bar back control remains visible | Slightly increased header width; narrow screen CSS protects facility/SOS actions |
+
+---
+
+## TABLE 11: FINAL DEPLOYMENT READINESS
+
+| Check | Status | Notes |
+| :--- | :--- | :--- |
+| TypeScript validation | Ready | Run `npm run lint` |
+| Production build | Ready | Run `npm run build` |
+| Utility tests | Ready | Current utility suite passes |
+| PWA manifest and service worker | Ready for preview | Icons, scope, manifest and auto-update generation are configured; test an actual HTTPS install |
+| Vercel configuration | Structurally ready | `vercel.json`, `api/index.ts` and Express server integration are present; confirm `/api/*` on Vercel preview |
+| Vercel/Telegram HTTPS | Pending final domain | Telegram Mini App URL requires an HTTPS deployment and real Telegram in-app testing |
+| Facility directory | Needs local verification | Do not claim every listed hospital/24-hour service/ambulance service until phones, hours and maternity services are confirmed |
+| Emergency hotline claims | Needs local verification | National/952 availability and user-facing claims should be verified with Ethiopian authorities before public launch |
+| Harari localization | Not fully complete | Source fallbacks are present, but native Harari copy and voice review remain required |
+| Medical safety review | Not complete | Obtain Ethiopian obstetric, midwife and public-health review before clinical promotion |
+| Privacy/security headers | Configured | CSP, CSP compatibility, API validation and basic Express headers should receive a production preview test |
+| Image licenses | Partly documented | See `src/assets/images/ATTRIBUTION.md`; review repository asset licenses before commercial distribution |

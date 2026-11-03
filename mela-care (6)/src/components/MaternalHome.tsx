@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   AppLanguage,
   ActiveServiceCategory,
@@ -15,6 +15,7 @@ import {
   Eye,
   Thermometer,
   Activity,
+  HeartPulse,
 } from 'lucide-react';
 
 interface MaternalHomeProps {
@@ -37,6 +38,7 @@ const copy = {
     pregnancyDesc: 'ምጥ፣ የፅንስ እንቅስቃሴ እና የወሊድ ዝግጅት',
     familyDesc: 'ዘዴዎች፣ የተዘረጋውን ክትትል እና የመከልከል መረጃ',
     help: 'የጤና ጣቢያ ያግኙ', labor: 'የምጥ ቆጣሪ', kit: 'የወሊድ ዝግጅት',
+    notPregnant: 'እርጉዝ አይደለሁም', pregnant: 'እርግዝና', postpartum: 'ድህረ ወለድ',
   },
   om: {
     language: 'Afaan', emergency: 'Hatattamaan jirtaa?', call: '907 bilbila',
@@ -47,6 +49,7 @@ const copy = {
     pregnancyDesc: 'Lakkaa’insa ciniinsaa, sochiin daa’imaa, qophii da’umsaa',
     familyDesc: 'Mala, yaadachiisa fi odeeffannoo ittisa ulfaa',
     help: 'Buufata fayyaa barbaadi', labor: 'Lakkoofsa Ciniinsaa', kit: 'Qophii Deessummaa',
+    notPregnant: 'Ulfa hin qabu', pregnant: 'Ulfaa', postpartum: 'Dhaleessa booda',
   },
   en: {
     language: 'Language', emergency: 'Do you need emergency help?', call: 'Call 907',
@@ -57,6 +60,7 @@ const copy = {
     pregnancyDesc: 'Contractions, baby kicks and birth preparation',
     familyDesc: 'Methods, missed doses and private advice',
     help: 'Find a health facility', labor: 'Contraction Timer', kit: 'Birth Preparedness',
+    notPregnant: 'Not pregnant', pregnant: 'Pregnant', postpartum: 'Postpartum',
   },
   har: {
     language: 'Language', emergency: 'አደጋ አለዎት?', call: '907 ይደውሉ',
@@ -67,6 +71,7 @@ const copy = {
     pregnancyDesc: 'ምጥ፣ የፅንስ እንቅስቃሴ እና የወሊድ ዝግጅት',
     familyDesc: 'ዘዴዎች፣ የተዘረጋውን ክትትል እና የመከልከል መረጃ',
     help: 'የጤና ጣቢያ ያግኙ', labor: 'የምጥ ቆጣሪ', kit: 'የወሊድ ዝግጅት',
+    notPregnant: 'እርጉዝ አይደለሁም', pregnant: 'እርግዝና', postpartum: 'ድህረ ወለድ',
   },
 };
 
@@ -77,6 +82,7 @@ export const MaternalHome: React.FC<MaternalHomeProps> = ({
   onOpenDirectory,
 }) => {
   const t = copy[lang] || copy.en;
+  const [lifeStage, setLifeStage] = useState<'not_pregnant' | 'pregnant' | 'postpartum'>('pregnant');
   const symptomItems = [
     { label: t.bleeding, icon: Droplets, body: 'pelvis_waters' as const },
     { label: t.headache, icon: Eye, body: 'head_eyes' as const },
@@ -86,10 +92,10 @@ export const MaternalHome: React.FC<MaternalHomeProps> = ({
   ];
 
   return (
-    <div className="space-y-4 pb-24">
-      <div className="flex items-center gap-2 bg-white border border-slate-200 rounded-xl px-3 py-2">
+    <div className="mc-home space-y-4 pb-24">
+      <div className="mc-language-wrap flex items-center gap-2 bg-white border border-slate-200 rounded-xl px-3 py-2">
         <span className="hidden sm:block text-xs font-bold text-slate-600">{t.language}</span>
-        <div className="grid grid-cols-4 gap-1 w-full min-w-0" role="group" aria-label={t.language}>
+        <div className="mc-language-track grid grid-cols-4 gap-1 w-full min-w-0" role="group" aria-label={t.language}>
           {([
             ['am', 'አማርኛ'],
             ['om', 'Oromoo'],
@@ -113,7 +119,30 @@ export const MaternalHome: React.FC<MaternalHomeProps> = ({
         </div>
       </div>
 
-      <section className="rounded-2xl border border-red-200 bg-[#FFF8F8] p-4 shadow-sm" aria-labelledby="emergency-title">
+      <div className="mc-life-stage-wrap" role="group" aria-label={
+        lang === 'am' || lang === 'har'
+          ? 'እርግዝና ሁኔታ'
+          : lang === 'om'
+          ? 'Sadarkaa ulfaa'
+          : 'Pregnancy stage'
+      }>
+        {([
+          ['not_pregnant', t.notPregnant],
+          ['pregnant', t.pregnant],
+          ['postpartum', t.postpartum],
+        ] as const).map(([stage, label]) => (
+          <button
+            key={stage}
+            type="button"
+            aria-pressed={lifeStage === stage}
+            onClick={() => setLifeStage(stage)}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+
+      <section className="mc-emergency-card rounded-2xl border border-red-200 bg-[#FFF8F8] p-4 shadow-sm" aria-labelledby="emergency-title">
         <div className="flex items-start justify-between gap-3">
           <div>
             <p id="emergency-title" className="text-lg font-black text-red-900">{t.emergency}</p>
@@ -128,7 +157,7 @@ export const MaternalHome: React.FC<MaternalHomeProps> = ({
           </a>
         </div>
 
-        <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2">
+        <div className="mc-symptom-grid mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2">
           {symptomItems.map((item) => (
             <button
               key={item.label}
@@ -144,8 +173,8 @@ export const MaternalHome: React.FC<MaternalHomeProps> = ({
         </div>
       </section>
 
-      <section className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <button
+      <section className={`grid grid-cols-1 sm:grid-cols-2 gap-3 ${lifeStage === 'not_pregnant' ? 'mc-service-stage-single' : ''}`}>
+        {lifeStage !== 'not_pregnant' && lifeStage !== 'postpartum' && <button
           type="button"
           onClick={() => onSelectCategory('danger_signs')}
           className="group min-h-36 rounded-2xl border border-[#E6D8DE] bg-white p-4 text-left shadow-sm transition-all hover:-translate-y-0.5 hover:border-[#9D4765] hover:shadow-md active:scale-[0.99] focus-visible:outline-offset-2"
@@ -163,41 +192,71 @@ export const MaternalHome: React.FC<MaternalHomeProps> = ({
             {lang === 'am' ? 'የእርግዝና አደጋ ምልክቶችን ይፈትሹ' : lang === 'om' ? 'Mallattoolee balaa ulfaa qoradhaa' : 'Check pregnancy warning signs'}
           </h2>
           <span className="mt-2 block text-xs font-bold text-[#9D4765]">{lang === 'am' ? 'መሣሪያዎችን ይክፈቱ' : lang === 'om' ? 'Meeshaalee banii' : 'Open pregnancy tools'} →</span>
-        </button>
-        <button
+        </button>}
+        {lifeStage === 'postpartum' && <button
           type="button"
-          onClick={() => onSelectCategory('family_planning')}
-          className="group min-h-36 rounded-2xl border border-[#D8E4DF] bg-white p-4 text-left shadow-sm transition-all hover:-translate-y-0.5 hover:border-[#0F766E] hover:shadow-md active:scale-[0.99] focus-visible:outline-offset-2"
+          onClick={() => onSelectCategory('postpartum_care')}
+          className="group min-h-36 rounded-2xl border border-[#E6D8DE] bg-white p-4 text-left shadow-sm transition-all hover:-translate-y-0.5 hover:border-[#9D4765] hover:shadow-md active:scale-[0.99] focus-visible:outline-offset-2"
         >
           <div className="flex items-center justify-between gap-3">
             <div className="flex items-center gap-2.5">
-              <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#E9F5F1] text-[#0F766E]">
+              <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#F8EAF0] text-[#881337]">
+                <HeartPulse className="h-5 w-5" />
+              </span>
+              <span className="text-xs font-black uppercase tracking-wide text-[#881337]">
+                {lang === 'am' || lang === 'har' ? 'ድህረ ወለድ እንክብካቤ' : lang === 'om' ? 'Kununsa dhalachuu booda' : 'Postpartum Care'}
+              </span>
+            </div>
+            <ChevronRight className="h-5 w-5 text-[#881337] transition-transform group-hover:translate-x-0.5" />
+          </div>
+          <h2 className="mt-4 text-lg font-black leading-snug text-slate-900">
+            {lang === 'am' || lang === 'har' ? 'የእርስዎ እና የህጻንዎ የቀን እንክብካቤ' : lang === 'om' ? 'Kununsa guyyaa kee fi daa’imaa keetii' : 'Daily care for you and your baby'}
+          </h2>
+          <span className="mt-2 block text-xs font-bold text-[#9D4765]">
+            {lang === 'am' || lang === 'har' ? 'መሣሪያዎች እና ጠቃሚ ምክሮችን ይክፈቱ' : lang === 'om' ? 'Meeshaalee fi gorsa banaa' : 'Open postpartum tools'} →
+          </span>
+        </button>}
+        <button
+          type="button"
+          onClick={() => onSelectCategory('family_planning')}
+          className="group min-h-36 rounded-2xl border border-[#E6D8DE] bg-white p-4 text-left shadow-sm transition-all hover:-translate-y-0.5 hover:border-[#9D4765] hover:shadow-md active:scale-[0.99] focus-visible:outline-offset-2"
+        >
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2.5">
+              <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#F8EAF0] text-[#881337]">
                 <Heart className="h-5 w-5" />
               </span>
-              <span className="text-xs font-black uppercase tracking-wide text-[#0F766E]">{t.family}</span>
+              <span className="text-xs font-black uppercase tracking-wide text-[#881337]">{t.family}</span>
             </div>
-            <ChevronRight className="h-5 w-5 text-[#0F766E] transition-transform group-hover:translate-x-0.5" />
+            <ChevronRight className="h-5 w-5 text-[#881337] transition-transform group-hover:translate-x-0.5" />
           </div>
           <h2 className="mt-4 text-lg font-black leading-snug text-slate-900">
             {lang === 'am' ? 'ዘዴዎች፣ የክትትል ጊዜ እና የተመሳሳይ ጥያቄዎች' : lang === 'om' ? 'Malawwan, yaadachiisa fi gorsa dhuunfaa' : 'Methods, reminders and private guidance'}
           </h2>
-          <span className="mt-2 block text-xs font-bold text-[#0F766E]">{lang === 'am' ? 'አማራጮችን ይመልከቱ' : lang === 'om' ? 'Filannoowwan ilaali' : 'Explore family planning'} →</span>
+          <span className="mt-2 block text-xs font-bold text-[#9D4765]">{lang === 'am' ? 'አማራጮችን ይመልከቱ' : lang === 'om' ? 'Filannoowwan ilaali' : 'Explore family planning'} →</span>
         </button>
       </section>
 
       <section className="grid grid-cols-2 gap-3 sm:grid-cols-4" aria-label={lang === 'am' ? 'ፈጣን መሣሪያዎች' : lang === 'om' ? 'Meeshaalee saffisaa' : 'Quick tools'}>
-        <button type="button" onClick={() => onSelectCategory('danger_signs', 'labor_timer')} className="quick-tool border-[#E9C7D2] bg-[#FFF8FA] text-[#6E1E3A]">
+        {lifeStage === 'postpartum' && <button type="button" onClick={() => onSelectCategory('postpartum_care')} className="quick-tool border-[#E9C7D2] bg-[#FFF8FA] text-[#6E1E3A]">
+          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#F3DEE7]"><HeartPulse className="h-5 w-5 text-[#881337]" /></span>
+          <span className="flex items-center gap-1">
+            {lang === 'am' || lang === 'har' ? 'ድህረ ወለድ እንክብካቤ' : lang === 'om' ? 'Kununsa dhalachuu booda' : 'Postpartum Care'}
+            <ChevronRight className="h-3.5 w-3.5" />
+          </span>
+        </button>}
+        {lifeStage !== 'not_pregnant' && lifeStage !== 'postpartum' && <button type="button" onClick={() => onSelectCategory('danger_signs', 'labor_timer')} className="quick-tool border-[#E9C7D2] bg-[#FFF8FA] text-[#6E1E3A]">
           <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#F3DEE7]"><Timer className="h-5 w-5 text-[#881337]" /></span>
           <span className="flex items-center gap-1">{t.labor}<ChevronRight className="h-3.5 w-3.5" /></span>
-        </button>
-        <button type="button" onClick={() => onSelectCategory('danger_signs', 'kick_counter')} className="quick-tool border-[#E7D6DF] bg-white text-[#6E1E3A]">
+        </button>}
+        {lifeStage !== 'not_pregnant' && lifeStage !== 'postpartum' && <button type="button" onClick={() => onSelectCategory('danger_signs', 'kick_counter')} className="quick-tool border-[#E7D6DF] bg-white text-[#6E1E3A]">
           <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#F3EAF0]"><Baby className="h-5 w-5 text-[#9D4765]" /></span>
           <span className="flex items-center gap-1">{lang === 'am' ? 'የፅንስ እንቅስቃሴ' : lang === 'om' ? 'Sochiin daa’imaa' : lang === 'har' ? 'የፅንስ እንቅስቃሴ' : 'Fetal Movement'}<ChevronRight className="h-3.5 w-3.5" /></span>
-        </button>
-        <button type="button" onClick={() => onSelectCategory('danger_signs', 'birth_kit')} className="quick-tool border-[#D9E2DE] bg-[#F7FBF9] text-[#315B50]">
-          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#E4F0EB]"><PackageCheck className="h-5 w-5 text-[#315B50]" /></span>
+        </button>}
+        {lifeStage !== 'not_pregnant' && <button type="button" onClick={() => onSelectCategory('danger_signs', 'birth_kit')} className="quick-tool border-[#F0DFD2] bg-[#FFF9F4] text-[#6E1E3A]">
+          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#F3E2D6]"><PackageCheck className="h-5 w-5 text-[#881337]" /></span>
           <span className="flex items-center gap-1">{t.kit}<ChevronRight className="h-3.5 w-3.5" /></span>
-        </button>
+        </button>}
         <button type="button" onClick={onOpenDirectory} className="quick-tool border-[#DDE3EC] bg-[#F7F9FC] text-[#334B68]">
           <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#E7EDF6]"><Building2 className="h-5 w-5 text-[#334B68]" /></span>
           <span className="flex items-center gap-1">{t.help}<ChevronRight className="h-3.5 w-3.5" /></span>

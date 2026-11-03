@@ -35,6 +35,7 @@ import {
   Timer,
   PackageCheck,
   Clock,
+  Eye,
 } from 'lucide-react';
 import silhouetteMapImg from '../assets/images/maternal_silhouette_map_1793061212776.jpg';
 import maternalPreeclampsiaImg from '../assets/images/maternal_preeclampsia_guide_1793105782753.jpg';
@@ -138,6 +139,15 @@ export const DangerSignsSystem: React.FC<DangerSignsSystemProps> = ({
     setIsBeaconOpen(true);
   };
 
+  const renderZoneIcon = (zone: BodyZone, className = 'w-4 h-4') => {
+    if (zone === 'head_eyes') return <Eye className={className} />;
+    if (zone === 'face_hands') return <Droplet className={className} />;
+    if (zone === 'chest_breath') return <Activity className={className} />;
+    if (zone === 'womb_belly') return <HeartPulse className={className} />;
+    if (zone === 'pelvis_waters') return <Waves className={className} />;
+    return <Thermometer className={className} />;
+  };
+
   // Start 5-second Edema Test
   const startEdemaTest = () => {
     setIsEdemaTesting(true);
@@ -215,7 +225,7 @@ export const DangerSignsSystem: React.FC<DangerSignsSystemProps> = ({
   return (
     <div className="space-y-4 animate-in fade-in pb-8">
       {/* 1. TOP TITLE & MODE SWITCHER */}
-      <div className="bg-white/80 backdrop-blur-md border border-[#FBCFE8] rounded-[2rem] p-4 shadow-xs space-y-3">
+      <div className="mc-inner-header bg-white/80 backdrop-blur-md border border-[#FBCFE8] rounded-[2rem] p-4 shadow-xs space-y-3">
         <div className="flex items-center justify-between">
           <button
             type="button"
@@ -501,11 +511,11 @@ export const DangerSignsSystem: React.FC<DangerSignsSystemProps> = ({
           <div className="lg:col-span-5 lg:sticky lg:top-20 space-y-4">
             {/* Main Visual Silhouette Canvas */}
             <div className="relative rounded-[2.5rem] bg-gradient-to-b from-[#881337] to-[#4A0420] p-4 text-white overflow-hidden shadow-lg border border-[#FBCFE8]">
-              <div className="relative w-full max-w-[280px] mx-auto h-[380px] rounded-3xl overflow-hidden border border-white/20 shadow-inner">
+              <div className="mc-silhouette-canvas relative w-full max-w-[280px] mx-auto rounded-3xl overflow-hidden border border-white/20 shadow-inner">
                 <img
                   src={silhouetteMapImg}
                   alt="Pregnant Silhouette Medical Anatomy"
-                  className="w-full h-full object-cover object-center opacity-90"
+                  className="w-full h-full object-contain object-center opacity-90"
                 />
 
                 {/* Glowing Interactive Hotspot Rings */}
@@ -540,7 +550,7 @@ export const DangerSignsSystem: React.FC<DangerSignsSystemProps> = ({
                             : 'bg-white text-[#4A0420] border-[#881337]'
                         }`}
                       >
-                        {node.icon}
+                        {renderZoneIcon(node.id)}
                       </span>
                     </button>
                   );
@@ -563,7 +573,7 @@ export const DangerSignsSystem: React.FC<DangerSignsSystemProps> = ({
                             : 'bg-white/10 text-rose-100 border-white/20 hover:bg-white/20'
                         }`}
                       >
-                        <span>{node.icon}</span>
+                        <span aria-hidden="true">{renderZoneIcon(node.id, 'w-3.5 h-3.5')}</span>
                         <span>{resolveText(node.label, lang)}</span>
                       </button>
                     );

@@ -29,6 +29,10 @@ import {
   Building2,
   ArrowRight,
   AlertCircle,
+  Droplet,
+  CalendarDays,
+  CircleDot,
+  Zap,
 } from 'lucide-react';
 import midwifeCareImg from '../assets/images/ethiopian_midwife_care_1793061212461.jpg';
 import contraceptiveCounselingImg from '../assets/images/contraceptive_counseling_1793105801588.jpg';
@@ -190,7 +194,7 @@ export const FamilyPlanningSystem: React.FC<FamilyPlanningSystemProps> = ({
   return (
     <div className="space-y-4 animate-in fade-in pb-8">
       {/* 1. TOP HEADER & SECTION CONTROLLER */}
-      <div className="bg-white/80 backdrop-blur-md border border-[#FBCFE8] rounded-[2rem] p-4 shadow-xs space-y-3">
+      <div className="mc-inner-header bg-white/80 backdrop-blur-md border border-[#FBCFE8] rounded-[2rem] p-4 shadow-xs space-y-3">
         <div className="flex items-center justify-between">
           <button
             type="button"
@@ -379,7 +383,14 @@ export const FamilyPlanningSystem: React.FC<FamilyPlanningSystemProps> = ({
                           : 'bg-[#FFF5F7] text-[#4A0420] border-[#FBCFE8] hover:bg-[#FFE4E6]'
                       }`}
                     >
-                      <span className="text-xl mb-1">{item.icon}</span>
+                      <span className="mc-method-icon mb-1" aria-hidden="true">
+                        {item.id === 'depo_provera_injection' && <Droplet className="w-5 h-5" />}
+                        {item.id === 'implant_jadelle_implanon' && <CalendarDays className="w-5 h-5" />}
+                        {item.id === 'copper_iud_loop' && <CircleDot className="w-5 h-5" />}
+                        {item.id === 'emergency_contraceptive_pill' && <Zap className="w-5 h-5" />}
+                        {item.id === 'oral_contraceptive_pills' && <Shield className="w-5 h-5" />}
+                        {item.id === 'lam_breastfeeding_natural' && <Baby className="w-5 h-5" />}
+                      </span>
                       <span className="text-xs font-black">{resolveText(item.timeLabel, lang)}</span>
                       <span
                         className={`text-[9px] mt-0.5 truncate max-w-[85px] ${
@@ -652,7 +663,7 @@ export const FamilyPlanningSystem: React.FC<FamilyPlanningSystemProps> = ({
                   }}
                   className="p-4 rounded-2xl bg-[#FFF5F7] hover:bg-[#FFE4E6] border border-[#FBCFE8] text-center active:scale-95 transition-all min-w-0 break-words"
                 >
-                  <span className="text-2xl mb-1 block">🤱</span>
+                  <span className="mb-1 flex justify-center" aria-hidden="true"><Baby className="w-6 h-6" /></span>
                   <span className="text-xs font-black text-[#4A0420] block leading-tight">
                     {lang === 'am' || lang === 'har' ? 'አዎ ጡት አጠባለሁ' : lang === 'om' ? 'Eeyyee, Hoosisa' : 'Yes, Nursing Baby'}
                   </span>
