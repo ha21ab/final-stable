@@ -388,13 +388,13 @@
 }
 
 .mc-home > section.grid > button:last-child {
-  background: var(--mc-green-tint);
-  border-color: var(--mc-green-tint);
+  background: var(--mc-blush);
+  border-color: var(--mc-hairline);
 }
 
 .mc-home > section.grid > button:last-child h2,
 .mc-home > section.grid > button:last-child span {
-  color: var(--mc-green-ink) !important;
+  color: var(--mc-burgundy) !important;
 }
 
 .mc-home section:not(.mc-emergency-card):not(.mc-home > section) {
@@ -1102,6 +1102,20 @@
   background: var(--mc-alert-tint);
   box-shadow: 0 10px 20px -14px rgba(192, 48, 28, .62);
   transform: translateY(-1px);
+}
+
+.mc-home > section.grid > button:hover {
+  border-color: var(--mc-burgundy) !important;
+  background: var(--mc-blush) !important;
+  box-shadow: var(--sh-grid), 0 14px 24px -18px rgba(78, 7, 36, .58);
+  transform: translateY(-2px);
+}
+
+.mc-home .quick-tool:hover {
+  border-color: var(--mc-hairline-warm);
+  background: var(--mc-blush);
+  box-shadow: 0 10px 18px -14px rgba(78, 7, 36, .58);
+  transform: translateY(-2px);
 }
 
 .mc-home button:active,

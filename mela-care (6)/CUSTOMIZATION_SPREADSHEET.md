@@ -157,6 +157,8 @@ Before Harari or clinical launch, separately verify every fallback string, `[HAR
 | Postpartum tools | Added feeding timer, daily-care checklist, rest/hydration actions and postpartum warning checks | `src/components/PostpartumCare.tsx` |
 | Image containment | Added fixed aspect-ratio treatment and `object-fit: contain` for the danger-sign silhouette and guarded visual cards against narrow-screen overflow | `src/index.css`, `src/components/DangerSignsSystem.tsx` |
 | Local images | Added locally bundled counseling, midwife, birth-kit, hemorrhage, preeclampsia and silhouette assets with source documentation | `src/assets/images/ATTRIBUTION.md` |
+| Final homepage theme correction | Removed the remaining green family-planning card treatment and restored burgundy/rose service-card styling; confirmed every language, lifecycle, emergency, symptom, service-card and quick-tool control has an explicit hover response | `src/index.css`, `src/components/MaternalHome.tsx` |
+| Final local npm verification | Started the app with `npm run dev -- --host 0.0.0.0`, confirmed HTTP 200 on port 3000, and checked narrow-homepage rendering without document-level horizontal overflow | Local browser and npm run |
 
 ---
 
@@ -190,3 +192,4 @@ Before Harari or clinical launch, separately verify every fallback string, `[HAR
 | Medical safety review | Not complete | Obtain Ethiopian obstetric, midwife and public-health review before clinical promotion |
 | Privacy/security headers | Configured | CSP, CSP compatibility, API validation and basic Express headers should receive a production preview test |
 | Image licenses | Partly documented | See `src/assets/images/ATTRIBUTION.md`; review repository asset licenses before commercial distribution |
+| Final browser smoke check (2026-11-04) | Passed for the local homepage | npm server responded HTTP 200; lifecycle filtering, language controls, facility action and bottom navigation rendered; tested widths showed no document-level horizontal overflow |
