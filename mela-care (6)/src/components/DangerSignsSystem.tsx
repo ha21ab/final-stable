@@ -109,7 +109,7 @@ export const DangerSignsSystem: React.FC<DangerSignsSystemProps> = ({
       label: { en: 'Womb & Kicks', am: 'ማህፀን እና ምት', om: 'Garaa & Sochii', har: 'ማህፀን እና ምት' },
       icon: '🤰',
       topPercent: 58,
-      leftPercent: 40,
+      leftPercent: 50,
       urgencyColor: '#DC2626',
     },
     {
@@ -511,7 +511,7 @@ export const DangerSignsSystem: React.FC<DangerSignsSystemProps> = ({
           <div className="lg:col-span-5 lg:sticky lg:top-20 space-y-4">
             {/* Main Visual Silhouette Canvas */}
             <div className="relative rounded-[2.5rem] bg-gradient-to-b from-[#881337] to-[#4A0420] p-4 text-white overflow-hidden shadow-lg border border-[#FBCFE8]">
-              <div className="mc-silhouette-canvas relative w-full max-w-[280px] mx-auto rounded-3xl overflow-hidden border border-white/20 shadow-inner">
+              <div className="mc-silhouette-canvas relative w-full max-w-[340px] mx-auto rounded-3xl overflow-hidden border border-white/20 shadow-inner">
                 <img
                   src={silhouetteMapImg}
                   alt="Pregnant Silhouette Medical Anatomy"

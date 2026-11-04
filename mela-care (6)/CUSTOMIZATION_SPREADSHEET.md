@@ -163,6 +163,8 @@ Before Harari or clinical launch, separately verify every fallback string, `[HAR
 | About navigation page | Added a right-most About button with usage guidance, privacy/offline information, medical-use notice and developer credit for `ha21ab` | `src/App.tsx`, `src/types.ts` |
 | Bottom navigation expansion | Expanded persistent navigation to four compact items: Home, Substance/Wellbeing, Facilities and About; made the navigation available across desktop and mobile breakpoints | `src/App.tsx`, `src/index.css` |
 | Language selector alignment | Unified the language selector to a single rounded segmented container with a full-height burgundy selected state instead of a contrasting small floating pill | `src/index.css`, `src/components/MaternalHome.tsx` |
+| About brand lockup and Telegram guidance | Replaced the About heading and mark-only treatment with the existing branded lockup, and added direct-contact guidance for the associated Mela Care Telegram bot chat | `src/App.tsx`, `public/mela-lockup.png` |
+| Danger-sign silhouette expansion | Increased the anatomical silhouette canvas and corrected the womb hotspot proportion so the interactive symbols align more closely with the medical image | `src/components/DangerSignsSystem.tsx`, `src/index.css` |
 
 ---
 

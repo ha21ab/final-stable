@@ -1010,8 +1010,9 @@
 }
 
 .mc-silhouette-canvas {
-  height: clamp(320px, 108vw, 380px);
-  aspect-ratio: 3 / 4;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  width: 100%;
 }
 
 .mc-silhouette-canvas img {

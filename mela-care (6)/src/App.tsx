@@ -242,8 +242,13 @@ export default function App() {
           <div className="mc-page-screen space-y-4">
             <div className="mc-about-page rounded-[28px] border border-[#E9D5DD] bg-white shadow-sm overflow-hidden">
               <div className="mc-about-hero bg-[#6E1E3A] px-5 py-7 text-white text-center">
-                <img src={`${import.meta.env.BASE_URL}mela-mark.png`} alt="" className="mx-auto h-16 w-16 rounded-2xl bg-white object-contain p-1 shadow-lg" />
-                <h1 className="mt-4 text-2xl font-black">Mela Care</h1>
+                <div className="mx-auto w-full max-w-[300px] rounded-2xl bg-white px-3 py-2 shadow-lg">
+                  <img
+                    src={`${import.meta.env.BASE_URL}mela-lockup.png`}
+                    alt="Mela Care"
+                    className="mx-auto h-24 w-full rounded-xl object-contain bg-[#08091A]"
+                  />
+                </div>
                 <p className="mt-2 text-sm text-[#F6D3E0]">
                   {lang === 'am' || lang === 'har'
                     ? 'የእናቶች፣ የስነ-ተዋልዶ እና የቤተሰብ ጤና መሣሪያ'
@@ -274,6 +279,13 @@ export default function App() {
                     : lang === 'om'
                     ? 'Mela Care bakka ogeessa fayyaa buusu miti. Mallattooleen balaa yeroon mul’atan ogeessa fayyaa naannoo kee gaafadhu.'
                     : 'Mela Care does not replace professional medical care. For danger signs or urgent symptoms, contact a nearby health worker or emergency service.'}
+                </p>
+                <p className="rounded-xl bg-[#F8F1F4] px-4 py-3 text-xs leading-relaxed text-slate-700">
+                  {lang === 'am' || lang === 'har'
+                    ? 'ለቀጥታ መገናኘት ከሚያገኙት የMela Care Telegram bot ቻት ይጠቀሙ።'
+                    : lang === 'om'
+                    ? 'Quunnamtii kallattii argachuuf chat Telegram bot Mela Care waliin fayyadamaa.'
+                    : 'For direct contact, you can use the associated Mela Care Telegram bot chat.'}
                 </p>
               </div>
             </div>
