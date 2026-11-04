@@ -29,6 +29,10 @@ import {
   EyeOff,
   Leaf,
   Building2,
+  Info,
+  ShieldCheck,
+  WifiOff,
+  Code2,
 } from 'lucide-react';
 
 export default function App() {
@@ -163,15 +167,15 @@ export default function App() {
             <EyeOff className="w-4 h-4 text-rose-200" />
           </button>
 
-          {/* Persistent facility-directory action */}
+          {/* Persistent emergency action */}
           <button
             type="button"
-            onClick={() => setIsDirectoryOpen(true)}
-            className="min-h-11 sm:min-h-0 px-3 py-2.5 sm:py-1.5 rounded-xl sm:rounded-2xl bg-white/10 hover:bg-white/20 active:scale-95 text-[#881337] font-black text-xs flex items-center gap-1 shrink-0 border border-[#E8D8DF] shadow-sm"
-            aria-label="Find a health facility"
+            onClick={handleEmergencyTrigger}
+            className="min-h-11 sm:min-h-0 px-3 py-2.5 sm:py-1.5 rounded-xl sm:rounded-2xl bg-[#D12E1B] hover:bg-[#B42314] active:scale-95 text-white font-black text-xs flex items-center gap-1 shrink-0 border border-[#EFAE9F] shadow-sm"
+            aria-label="Open emergency SOS"
           >
-            <Building2 className="w-3.5 h-3.5" />
-            <span>{lang === 'am' || lang === 'har' ? 'ጤና ጣቢያ' : lang === 'om' ? 'Buufata' : 'Facilities'}</span>
+            <AlertCircle className="w-3.5 h-3.5" />
+            <span>{lang === 'am' || lang === 'har' ? 'አደጋ 907' : lang === 'om' ? 'Balaa 907' : 'SOS 907'}</span>
           </button>
         </div>
       </header>
@@ -234,6 +238,46 @@ export default function App() {
               onOpenDirectory={() => setIsDirectoryOpen(true)}
             />
           </div>
+        ) : activeCategory === 'about' ? (
+          <div className="mc-page-screen space-y-4">
+            <div className="mc-about-page rounded-[28px] border border-[#E9D5DD] bg-white shadow-sm overflow-hidden">
+              <div className="mc-about-hero bg-[#6E1E3A] px-5 py-7 text-white text-center">
+                <img src={`${import.meta.env.BASE_URL}mela-mark.png`} alt="" className="mx-auto h-16 w-16 rounded-2xl bg-white object-contain p-1 shadow-lg" />
+                <h1 className="mt-4 text-2xl font-black">Mela Care</h1>
+                <p className="mt-2 text-sm text-[#F6D3E0]">
+                  {lang === 'am' || lang === 'har'
+                    ? 'የእናቶች፣ የስነ-ተዋልዶ እና የቤተሰብ ጤና መሣሪያ'
+                    : lang === 'om'
+                    ? 'Meeshaa fayyaa haadholii, dhalootaa fi karoora maatii'
+                    : 'Maternal, reproductive and family-care support'}
+                </p>
+              </div>
+              <div className="p-5 space-y-4">
+                <section className="rounded-2xl border border-[#E9D5DD] bg-[#FFF9FB] p-4">
+                  <h2 className="text-base font-black text-[#6E1E3A]">
+                    {lang === 'am' || lang === 'har' ? 'Mela Care እንዴት ይጠቀሙት?' : lang === 'om' ? 'Mela Care akkamittin fayyadaman?' : 'How to use Mela Care'}
+                  </h2>
+                  <ol className="mt-3 grid gap-2 text-sm text-slate-700">
+                    <li><strong>1.</strong> {lang === 'om' ? 'Ulfaa, ultruffa dhabamuu ykn dhalachuu booda filadhaa.' : lang === 'am' || lang === 'har' ? 'እርግዝና፣ እርጉዝ ያልሆኑ ወይም ድህረ ወለድ ሁኔታዎን ይምረጡ።' : 'Choose not pregnant, pregnant or postpartum.'}</li>
+                    <li><strong>2.</strong> {lang === 'om' ? 'Mallattoolee balaa ykn meeshaalee barbaachisan banadhaa.' : lang === 'am' || lang === 'har' ? 'ምልክቶችን አነጋግርዎት ወይም የቤተሰብ ምጣኔ መሣሪያዎችን ይክፈቱ።' : 'Open a warning-sign guide or care tool.'}</li>
+                    <li><strong>3.</strong> {lang === 'om' ? 'Tajaajila haala qabeessa yoo barbaaddan buufata fayyaa ykn 907 fayyadamaa.' : lang === 'am' || lang === 'har' ? 'ለአስቸኳይ ጥገና 907 ይደውሉ ወይም ጤና ጣቢያ ይፈልጉ።' : 'Use the SOS action or facility directory for urgent help.'}</li>
+                  </ol>
+                </section>
+                <section className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <div className="rounded-2xl bg-[#F8F1F4] p-4 text-center"><ShieldCheck className="mx-auto h-6 w-6 text-[#6E1E3A]" /><strong className="mt-2 block text-sm">{lang === 'om' ? 'Dhuunfaa' : 'Private'}</strong><span className="mt-1 block text-xs text-slate-600">{lang === 'om' ? 'Meeshaaleen maalii bilbila keessan irratti.' : lang === 'am' ? 'መረጃዎ በመሳሪያዎ ላይ ይቆያል' : 'Care information stays on your device'}</span></div>
+                  <div className="rounded-2xl bg-[#EDF5F1] p-4 text-center"><WifiOff className="mx-auto h-6 w-6 text-[#1F6B45]" /><strong className="mt-2 block text-sm">Offline-ready</strong><span className="mt-1 block text-xs text-slate-600">{lang === 'om' ? 'Interneetii malee fayyadamuu danda’a.' : lang === 'am' ? 'ኢንተርኔት ሳይሆን ጥቅም ላይ መዋል ይችላል' : 'Key tools can work without internet'}</span></div>
+                  <div className="rounded-2xl bg-[#F8F1F4] p-4 text-center"><Code2 className="mx-auto h-6 w-6 text-[#6E1E3A]" /><strong className="mt-2 block text-sm">{lang === 'om' ? 'Misoomaa' : lang === 'am' ? 'ገንቢ' : 'Developer'}</strong><span className="mt-1 block text-xs text-slate-600">ha21ab</span></div>
+                </section>
+                <p className="rounded-xl border border-[#F2D8E1] px-4 py-3 text-xs leading-relaxed text-slate-600">
+                  {lang === 'am' || lang === 'har'
+                    ? 'Mela Care ሕክምና ለመተካት አይደለም። አደገኛ ምልክቶች የሚታዩበት ጊዜ አካባቢዎት ያለ የጤና ባለሙያ ይጠይቁ።'
+                    : lang === 'om'
+                    ? 'Mela Care bakka ogeessa fayyaa buusu miti. Mallattooleen balaa yeroon mul’atan ogeessa fayyaa naannoo kee gaafadhu.'
+                    : 'Mela Care does not replace professional medical care. For danger signs or urgent symptoms, contact a nearby health worker or emergency service.'}
+                </p>
+              </div>
+            </div>
+          </div>
         ) : (
           /* FOCUSED VIEW 2: FAMILY PLANNING & CONTRACEPTIVE SYSTEM */
           <div className="mc-page-screen space-y-4">
@@ -268,7 +312,7 @@ export default function App() {
 
       {/* Bottom sticky navigation */}
       <footer className="mc-bottom-nav sticky bottom-0 z-30 bg-white border-t border-slate-200 px-3 py-2 shadow-lg">
-        <div className="max-w-6xl mx-auto grid grid-cols-3 gap-2">
+        <div className="max-w-6xl mx-auto grid grid-cols-4 gap-1 sm:gap-2">
           <button
             type="button"
             onClick={handleGoHome}
@@ -293,17 +337,34 @@ export default function App() {
                 : 'text-slate-700'
             }`}
           >
-            <Leaf className="w-5 h-5" />
+            <Leaf className="w-5 h-5 text-[#1F6B45]" />
             <span className="mt-0.5 text-center">{lang === 'am' || lang === 'har' ? 'የሱስ እገዛ' : lang === 'om' ? 'Mirkaneessaa' : 'Substance'}</span>
           </button>
           <button
             type="button"
-            onClick={handleEmergencyTrigger}
-            className="min-h-12 flex flex-col items-center justify-center rounded-xl text-xs font-black bg-red-700 text-white"
+            onClick={() => setIsDirectoryOpen(true)}
+            className={`min-h-12 flex flex-col items-center justify-center rounded-xl text-xs font-bold ${
+              isDirectoryOpen ? 'bg-[#EEF2F7] text-[#334B68]' : 'text-slate-700'
+            }`}
           >
-            <AlertCircle className="w-5 h-5" />
+            <Building2 className="w-5 h-5 text-[#334B68]" />
             <span className="text-[10px] mt-0.5">
-              {lang === 'am' || lang === 'har' ? 'አደጋ 907' : lang === 'om' ? 'Balaa 907' : 'SOS 907'}
+              {lang === 'am' || lang === 'har' ? 'ጤና ጣቢያ' : lang === 'om' ? 'Buufata' : 'Facilities'}
+            </span>
+          </button>
+          <button
+            type="button"
+            onClick={() => handleSelectCategory('about')}
+            aria-current={activeCategory === 'about' ? 'page' : undefined}
+            className={`min-h-12 flex flex-col items-center justify-center rounded-xl text-xs font-bold ${
+              activeCategory === 'about'
+                ? 'bg-[#6E1E3A] text-white'
+                : 'text-slate-700'
+            }`}
+          >
+            <Info className="w-5 h-5" />
+            <span className="text-[10px] mt-0.5">
+              {lang === 'am' || lang === 'har' ? 'ስለ መተግበሪያው' : lang === 'om' ? 'Waa’ee' : 'About'}
             </span>
           </button>
         </div>

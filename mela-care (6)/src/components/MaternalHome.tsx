@@ -93,7 +93,7 @@ export const MaternalHome: React.FC<MaternalHomeProps> = ({
 
   return (
     <div className="mc-home space-y-4 pb-24">
-      <div className="mc-language-wrap flex items-center gap-2 bg-white border border-slate-200 rounded-xl px-3 py-2">
+      <div className="mc-language-wrap flex items-center gap-2 rounded-xl px-3 py-2">
         <span className="hidden sm:block text-xs font-bold text-slate-600">{t.language}</span>
         <div className="mc-language-track grid grid-cols-4 gap-1 w-full min-w-0" role="group" aria-label={t.language}>
           {([

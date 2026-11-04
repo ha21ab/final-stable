@@ -201,10 +201,6 @@
   color: var(--mc-burgundy);
 }
 
-.mc-bottom-nav button:last-child {
-  background: var(--mc-alert);
-  color: var(--mc-on-dark);
-}
 
 .mc-app > main {
   max-width: 1200px;
@@ -237,9 +233,9 @@
 .mc-language-wrap {
   position: relative;
   z-index: 1;
-  border: 0;
-  border-radius: var(--r-pill);
-  background: rgba(60,5,30,.34);
+  border: 1px solid var(--mc-hairline);
+  border-radius: var(--r-md);
+  background: var(--mc-sand);
   padding: 4px;
 }
 
@@ -260,9 +256,9 @@
   height: 48px;
   min-width: 0;
   border: 0;
-  border-radius: 24px;
+  border-radius: var(--r-field);
   background: transparent;
-  color: var(--mc-on-dark);
+  color: var(--mc-ink);
   font-size: 16px;
   line-height: 1.2;
   font-weight: 600;
@@ -270,8 +266,8 @@
 }
 
 .mc-language-track button[aria-pressed="true"] {
-  background: var(--mc-surface);
-  color: var(--mc-burgundy);
+  background: var(--mc-burgundy);
+  color: var(--mc-on-dark);
   box-shadow: 0 4px 10px -2px rgba(40,0,20,.35);
 }
 
@@ -460,10 +456,6 @@
   .mc-language-track button[aria-pressed="true"] {
     background: var(--mc-burgundy);
     color: var(--mc-on-dark);
-  }
-
-  .mc-bottom-nav {
-    display: none;
   }
 
   .mc-app > main {
@@ -755,11 +747,20 @@
 }
 
 .mc-language-wrap {
-  background: rgba(78, 7, 36, .72) !important;
+  background: var(--mc-sand) !important;
+  border-color: var(--mc-hairline-warm) !important;
+  padding: 4px !important;
 }
 
 .mc-language-track button {
   font-size: 14px !important;
+  color: var(--mc-ink) !important;
+}
+
+.mc-language-track button[aria-pressed="true"] {
+  background: var(--mc-burgundy) !important;
+  color: var(--mc-on-dark) !important;
+  box-shadow: 0 4px 10px -2px rgba(40, 0, 20, .35) !important;
 }
 
 .mc-emergency-card {
@@ -840,6 +841,25 @@
 .mc-bottom-nav button {
   min-height: 52px;
   font-size: 12px;
+}
+
+.mc-bottom-nav {
+  max-width: 720px;
+}
+
+.mc-bottom-nav > div {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.mc-bottom-nav button {
+  min-width: 0;
+  padding-inline: 4px;
+}
+
+.mc-bottom-nav button span {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  line-height: 1.05;
 }
 
 /* Inner systems: compact headers, clear hierarchy, no clipping */
@@ -1172,12 +1192,23 @@
   }
 
   .mc-topbar > div:first-child > div span {
-    max-width: 104px;
+    max-width: 72px;
   }
 
   .mc-topbar button[aria-label="Emergency SOS flashcard"] {
     padding-inline: 8px !important;
     font-size: 11px !important;
+  }
+
+  .mc-topbar button[aria-label="Open emergency SOS"] {
+    max-width: 92px;
+    padding-inline: 8px !important;
+    gap: 4px !important;
+  }
+
+  .mc-topbar button[aria-label="Install Mela Care as Progressive Web App"] {
+    width: 44px;
+    padding-inline: 10px !important;
   }
 
   .mc-life-stage-wrap button {
@@ -1195,10 +1226,20 @@
     right: 8px;
     bottom: 8px;
     border-radius: var(--r-pill);
+    z-index: 50;
   }
 
   .mc-bottom-nav button {
     font-size: 11px;
+  }
+
+  .mc-bottom-nav button span {
+    width: 100%;
+    overflow: hidden;
+    text-overflow: clip;
+    white-space: normal;
+    overflow-wrap: normal;
+    word-break: normal;
   }
 
   .mc-app main [role="dialog"] > div:first-child,

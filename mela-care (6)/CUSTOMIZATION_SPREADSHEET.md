@@ -159,6 +159,10 @@ Before Harari or clinical launch, separately verify every fallback string, `[HAR
 | Local images | Added locally bundled counseling, midwife, birth-kit, hemorrhage, preeclampsia and silhouette assets with source documentation | `src/assets/images/ATTRIBUTION.md` |
 | Final homepage theme correction | Removed the remaining green family-planning card treatment and restored burgundy/rose service-card styling; confirmed every language, lifecycle, emergency, symptom, service-card and quick-tool control has an explicit hover response | `src/index.css`, `src/components/MaternalHome.tsx` |
 | Final local npm verification | Started the app with `npm run dev -- --host 0.0.0.0`, confirmed HTTP 200 on port 3000, and checked narrow-homepage rendering without document-level horizontal overflow | Local browser and npm run |
+| Header and bottom navigation exchange | Moved app-wide SOS 907 to the persistent header and moved the health-facility directory into the bottom navigation | `src/App.tsx` |
+| About navigation page | Added a right-most About button with usage guidance, privacy/offline information, medical-use notice and developer credit for `ha21ab` | `src/App.tsx`, `src/types.ts` |
+| Bottom navigation expansion | Expanded persistent navigation to four compact items: Home, Substance/Wellbeing, Facilities and About; made the navigation available across desktop and mobile breakpoints | `src/App.tsx`, `src/index.css` |
+| Language selector alignment | Unified the language selector to a single rounded segmented container with a full-height burgundy selected state instead of a contrasting small floating pill | `src/index.css`, `src/components/MaternalHome.tsx` |
 
 ---
 
